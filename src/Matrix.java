@@ -158,7 +158,7 @@ public class Matrix {
     /* Mengembalikan nilai determinan yang diperoleh dengan cara reduksi baris */
         int i, j, k, idx; 
         double temp, temp1, temp2;
-        double[] tempRow = {};
+        double[] tempRow = new double[this.row];
         int det = 1;
         int co = 1;
         for (i = 0; i < this.row; i++) {
