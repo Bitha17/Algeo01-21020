@@ -154,5 +154,44 @@ public class Matrix {
         }
     }
 
+    double detReduction(){
+    /* Mengembalikan nilai determinan yang diperoleh dengan cara reduksi baris */
+        int i, j, k, idx; 
+        double temp, temp1, temp2;
+        double[] tempRow = {};
+        int det = 1;
+        int co = 1;
+        for (i = 0; i < this.row; i++) {
+            idx = i;
+            while (this.contents[idx][i] == 0 && idx < this.row) {
+                idx++;
+            }
+            if (idx == this.row) {
+                return 0;
+            }
+            if (i != idx) {
+                for (j = 0; j < this.row; j++) {
+                    temp = this.contents[i][j];
+                    this.contents[i][j] = this.contents[idx][j];
+                    this.contents[idx][j] = temp;
+                }
+                det *= -1;
+            }
+            for (j = 0; j < this.row; j++) {
+                tempRow[j] = this.contents[i][j];
+            }
+            for (j = i+1; j < this.row; j++) {
+                temp1 = tempRow[i];
+                temp2 = this.contents[j][i]; 
+                for (k = 0; k < this.row; k++) {
+                    this.contents[j][k] = temp1 * this.contents[j][k] - temp2 * tempRow[k];
+                }
+                co *= temp1;
+            }
+        }
+        for (int l = 0; l < this.row; l++) {
+            det *= this.contents[l][l];
+        }
+        return det/co;
+    }
 }
-
