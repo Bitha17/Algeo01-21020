@@ -1,6 +1,6 @@
 import java.io.*;
 import java.util.*;
-// import java.lang.Math;
+import java.lang.Math;
 
 public class Matrix {
     private int row, col;
@@ -41,7 +41,7 @@ public class Matrix {
         for (int i = 0; i < this.row; i++){
             for (int j = 0; j < this.col; j++){
                 double x = in.nextDouble();
-                setELMT(x, row, col);
+                this.contents[i][j] = x;
             }
         }
         in.close();
@@ -129,14 +129,12 @@ public class Matrix {
     Matrix multiplyMatrix(Matrix m1, Matrix m2){
     /* Prekondisi : Ukuran kolom efektif m1 = ukuran baris efektif m2 */
     /* Mengirim hasil perkalian matriks: salinan m1 * m2 */
-        Matrix m3 = new Matrix;
-        m3.row = m1.row;
-        m3.col = m2.col;
+        Matrix m3 = new Matrix(m1.getMatrixRow(), m2.getMatrixCol());
         for (int i = 0; i < m3.row; i++){
             for (int j = 0; j < m3.col; j++){
-                int temp = 0;
-                for (int k = 0; k < COL_EFF(m1); k++){
-                    temp += (m1.getELMT(i,k)*getELMT(k,j));
+                double temp = 0.0;
+                for (int k = 0; k < m1.getMatrixCol(); k++){
+                    temp += (m1.getELMT(i,k) * m2.getELMT(k,j));
                 }
                 m3.setELMT(temp,i,j);
             }
@@ -144,12 +142,12 @@ public class Matrix {
         return m3;
     }
 
-    void multiplyConst(double const){
+    void multiplyConst(double konstanta){
     /* I.S. m terdefinisi, k terdefinisi */
     /* F.S. Mengalikan setiap elemen m dengan k */
         for (int i = 0; i < this.row; i++){
             for (int j = 0; j < this.col; j++){
-                this.contents[i][j] = this.contents[i][j]*const;
+                this.contents[i][j] *= konstanta;
             }
         }
     }
@@ -166,9 +164,18 @@ public class Matrix {
         }
         return m;
     }
+    
+    Boolean isRowZero(int row) {
+        for (int i = 0; i < this.row; i++) {
+            if (this.contents[row][i] != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     /* *** OBE *** */
-    void GaussOBE() {
+    void GaussOBE() { 
         int i, j; 
         i = 0;
         j = 0;       
@@ -221,8 +228,8 @@ public class Matrix {
     void GaussJordanOBE() {
         /* Membentuk matrix eselon dengan 1 utama */
         this.GaussOBE();
-        for (int i = this.row - 1; i >= 0; i++) {
-            for (int j = this.row - 1; j >= 0; j++) {
+        for (int i = this.row - 1; i >= 0; i--) {
+            for (int j = this.row - 1; j >= 0; j--) {
                 if (this.contents[i][j] == 1) {
                     double factor;
                     int nextRow = i - 1;
@@ -242,10 +249,9 @@ public class Matrix {
     
     /* *** SPL *** */
     /* Solusi SPL dengan metode Inverse, GaussEquation, GaussJordanEquation, dan Kaidah Crammer */
-    Matrix SPLInverse() {
+    void SPLInverse() {
         if (this.row != this.col - 1) {
-            System.out.println("Matrix tidak valid! Dibutuhkan " + (this.col - 1) + " buah persamaan untuk " + (this.col - 1) + " peubah");
-            return null;
+            System.out.println("SPL tidak dapat diselesaikan dengan metode invers");
         } else {
             Matrix mTemp, mB, mResult;
             /* Menyimpan matriks A */
@@ -263,21 +269,149 @@ public class Matrix {
                 System.out.println("Matrix tidak memiliki inverse, tidak dapat menemukan solusi SPL dengan inverse!");
             }
             else {
-                mTemp = mTemp.inverseCofactor();
+                mTemp = mTemp.inverseOBE();
                 for (int i = 0; i < this.row; i++) {
-                    mB.setElmt(this.contents[i][this.col-1],i,0);
+                    mB.setELMT(this.contents[i][this.col-1], i, 0);
                 }
-                mResult = multiplyMatrix(mTemp,mb);
-                mResult.multiplyConst(1/mTemp.detCofactor());
+                mResult = multiplyMatrix(mTemp, mB);
+                // mResult.multiplyConst(1/mTemp.detCofactor());
+                mResult.displaySPL();
             }
-            return mResult;
         }
     }
 
-    Matrix SPLGauss() {
+    Matrix mSPL() {
+        Matrix mTemp, mB, mResult;
+        /* Menyimpan matriks A */
+        mTemp = new Matrix(this.row, this.col-1);
+        /* Menyimpan array B */
+        mB = new Matrix(this.row, 1);
+        /* Array hasil solusi x */
+        mResult = new Matrix(this.row, 1); 
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.col-1; j++) {
+                mTemp.setELMT(this.contents[i][j], i, j);
+            }
+        } 
+        mTemp = mTemp.inverseOBE();
+        for (int i = 0; i < this.row; i++) {
+            mB.setELMT(this.contents[i][this.col-1], i, 0);
+        }
+        mResult = multiplyMatrix(mTemp, mB);
+        // mResult.multiplyConst(1/mTemp.detCofactor());
+        return mResult;
+    }
+
+    void SPLGauss() {
+        // Fungsi menampilkan solusi SPL dengan GaussEquation
         this.GaussOBE();
+        Boolean singleSolution, manySolution, noSolution;
+        singleSolution = false;
+        manySolution = false;
+        noSolution = false;
+        Matrix mResult = new Matrix(this.row, 0);
+        int row, col;
+        row = this.row - 1;
+        col = this.col - 1;
+        // Check for single solution
+        if (this.contents[row][col-1] != 0 && this.contents[row][col] != 0 && this.row == this.col - 1) {
+            singleSolution = true; 
+        } else {
+            manySolution = true;
+        } 
+        
+        // Check for no solution
+        for (int i = 0; i <= row; i++) {
+            if (this.isRowZero(i) && this.contents[i][col] != 0) {
+                noSolution = true;
+                manySolution = false;
+                singleSolution = false; // double check 
+            }
+        }
+
+        // Melakukan penyulihan mundur
+        if (singleSolution) {
+            double x = this.contents[row][col];
+            double xlast = x / this.contents[row][col-1]; 
+            mResult.setELMT(xlast, row, 0);
+            double prevX = xlast;
+            for (int i = row - 1; i >= 0; i--) {
+                for (int j = col-1; j > row; j--) {
+                    x = this.contents[i][col];
+                    x -= this.contents[i][j] * prevX;
+                    prevX = x;
+                }
+                mResult.setELMT(x, i, 0);
+            }
+            mResult.displaySPL();
+        } else if (manySolution) {
+            this.GaussJordanOBE();
+            Boolean allElZero[] = new Boolean[this.row];
+            Boolean colOne[] = new Boolean[this.row];
+            for (int i = 0; i < this.row; i++) {
+                allElZero[i] = true;
+            } 
+            for (int i = 0; i < this.row; i++) {
+                if (!(this.isRowZero(i))) {
+                    allElZero[i] = false;
+                    break; 
+                }
+            }
+            for (int i = 0; i < this.row; i++) {
+                colOne[i] = false;
+            }
+            // Searching for the column that has leading entry
+            for (int i = 0; i < this.row; i++) {
+                for (int j = 0; j < this.row; j++) {
+                    if (this.contents[i][j] == 1) {
+                        colOne[j] = true;
+                        break;
+                    }
+                }
+            }
+            
+        } else if (noSolution) {
+            System.out.println("SPL tidak memiliki solusi");
+        }
+    }
+
+    void SPLGaussJordan() {
+
+    }
+
+    void SPLKaidahCramer() {
+        if (this.row != this.col - 1) {
+            System.out.println("SPL tidak dapat diselesaikan dengan kaidah cramer");
+        } else if (this.detCofactor() == 0) {
+            System.out.println("SPL tidak dapat diselesaikan dengan kaidah cramer");
+        } else {
+            Matrix mDet = new Matrix(this.row, this.row);
+            Matrix mResult = new Matrix(this.row, this.row);
+            double det = this.detCofactor();
+            for (int i = 0; i < this.row; i++) {
+                for (int j = 0; j < this.row; j++) {
+                    mDet.setELMT(this.contents[i][j], i, j);
+                }
+            }
+            int j = 0;
+            while (j < this.col-1) {
+                for (int i = 0; i < this.row; i++) {
+                    mDet.setELMT(this.contents[i][this.col-1], i, j);
+                }
+                double detX = mDet.detCofactor();
+                double x = detX/det;
+                mResult.setELMT(x, j, 0); 
+                j++;
+            }
+            mResult.displaySPL();
+        }
+    }
+
+    /* *** Parametric Solution Case Handle *** */
+    void parametric() {
         
     }
+
 
     /* *** DETERMINAN *** */
     double detCofactor(){
@@ -290,8 +424,8 @@ public class Matrix {
                 int a = 1;
                 for (int i = 0; i < this.row; i++) {
                     Matrix m1 = new Matrix(this.row - 1, this.col - 1);
-                    for (int j = 0; j < m1.row; j++){
-                        for (int k = 0; k < m1.col; k++){
+                    for (int j = 0; j < m1.getMatrixRow(); j++){
+                        for (int k = 0; k < m1.getMatrixCol(); k++){
                             if (k < i){
                                 m1.contents[j][k] = this.contents[j+1][k];
                             }
@@ -316,12 +450,14 @@ public class Matrix {
         int co = 1;
         for (i = 0; i < this.row; i++) {
             idx = i;
-            while (this.contents[idx][i] == 0 && idx < this.row) {
-                idx++;
+            for (int m = 0; m < this.row; m++) {
+                if (isRowZero(m)) {
+                    idx = this.row;
+                }
             }
             if (idx == this.row) {
-                return 0;
-            }
+                return 0.0;
+            } 
             if (i != idx) {
                 for (j = 0; j < this.row; j++) {
                     temp = this.contents[i][j];
@@ -348,7 +484,7 @@ public class Matrix {
         return det/co;
     }
 
-    /* *** Inverse Matrix *** */
+    /* *** INVERSE MATRIX *** */
     Matrix inverseOBE() {
         Matrix m = new Matrix(this.row, this.col * 2);
         for (int i = 0; i < m.getMatrixRow(); i++) {
@@ -413,5 +549,30 @@ public class Matrix {
             }
             return mResult;
         }
+    }
+
+    /* Interpolasi Polinom */
+    void Interpolasi(){
+        Matrix mI = new Matrix(this.row, this.row+1);
+        for (int i = 0; i < mI.row; i++){
+            for (int j = 0; j < mI.row; j++){
+                mI.setELMT(Math.pow(this.contents[i][0],j), i, j);
+            }
+            mI.setELMT(this.contents[i][1], i, this.row);
+        }
+        mI.displayMatrix();
+        Matrix mO = mI.mSPL();
+        mO.displayMatrix();
+        String ans = "y = ";
+        ans += mO.contents[0][0];
+        for (int i = 1; i < mI.row; i++){
+            if(i == 1){
+                ans += " + " + mO.contents[1][0] + "x";
+            }
+            else{
+                ans += " + " + mO.contents[i][0] + "x**" + i;
+            }
+        }
+        System.out.println(ans);
     }
 }
