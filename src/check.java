@@ -3,14 +3,14 @@ import java.io.*;
 
 public class check {
     public static void main(String[] args) {
-        // int m, n;
-        // Scanner in = new Scanner(System.in);
-        // System.out.println("Masukan jumlah baris pada matriks: ");
-        // m = in.nextInt();
-        // System.out.println("Masukan jumlah kolom pada matriks: ");
-        // n = in.nextInt();
-        // Matrix M = new Matrix(m, n);
-        // M.readMatrix(); // RIGHT
+        int m, n;
+        Scanner in = new Scanner(System.in);
+        System.out.println("Masukan jumlah baris pada matriks: ");
+        m = in.nextInt();
+        System.out.println("Masukan jumlah kolom pada matriks: ");
+        n = in.nextInt();
+        Matrix M = new Matrix(m, n);
+        M.readMatrix(); // RIGHT
         // M.matrixToFile(menuSave());
         // in.close();
         // int o;
@@ -56,18 +56,11 @@ public class check {
         // variables[i-1] = in.nextDouble();
         // }
         // matrix.regresi(variables);
-        int row = 0;
-    }
-
-    public static int menuSave() {
-        Scanner sv = new Scanner(System.in);
-        System.out.print("Apakah anda ingin menyimpan hasil dalam file(1:ya, 2:tidak): ");
-        int choice = sv.nextInt();
-        sv.close();
-        return choice;
-    }
-
-    public static void change(int a) {
-        row = a;
+        // M.SPLGauss(); // RIGHT
+        M.GaussJordanOBE();
+        M.displayMatrix();
+        M.SPLGaussJordan();
+        // M.SPLInverse();
+        in.close();
     }
 }
