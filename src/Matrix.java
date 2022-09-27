@@ -23,7 +23,10 @@ public class Matrix {
     /* Melakukan assignment Matrix(row,col) <- x */
         this.contents[row][col] = x;
     }
-
+    void setMatrixDim(int row, int col){
+        this.row = row;
+        this.col = col;
+    }
     int getMatrixRow() {
     /* Mengirimkan jumlah baris pada Matrix */
         return this.row;
@@ -44,6 +47,7 @@ public class Matrix {
                 this.contents[i][j] = x;
             }
         }
+        in.close();
     }
 
     void readMatrix2(File text) {
@@ -110,7 +114,7 @@ public class Matrix {
                     }
                     writer.write("\n");
                 }
-                System.out.println("File telah berhasil dibuat!\n");
+                System.out.println("File telah berhasil dibuat!");
                 writer.close();
             } 
             else {
@@ -123,13 +127,21 @@ public class Matrix {
         }
     }
 
-    void detToFile(File output, double det) {
+    void detToFile(int choice, double det) {
     /* Menyimpan hasil perhitungan determinan matriks ke dalam file */
         try{
-            FileWriter writer = new FileWriter(output);
-            writer.write("Determinan = " + Double.toString(det) + "\n");
-            System.out.println("File berhasil dibuat");
-            writer.close();
+            Scanner in = new Scanner(System.in);
+            if (choice == 1) {
+                System.out.print("Masukkan nama file beserta extension(.txt): ");
+                FileWriter writer = new FileWriter("../test/" + in.nextLine());
+                writer.write("Determinan = " + Double.toString(det) + "\n");
+                System.out.println("File telah berhasil dibuat!");
+                writer.close();
+            } 
+            else {
+                System.out.println("");
+            }
+            in.close();
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -695,6 +707,7 @@ public class Matrix {
             Scanner s1 = new Scanner(System.in);
             File text = new File("../test/" + s1.nextLine());
             saveToFile(text,s);
+            s1.close();
         }
         sv.close();
     }
@@ -716,7 +729,7 @@ public class Matrix {
         System.out.println("f(" + a + "," + b + ") = " + f.getELMT(0,0));
     }
     /* Regresi Linier Berganda */
-    void regresi(Double[] variables){
+    void regresi(Double[] peubah){
         Matrix regresi = new Matrix(this.col,this.col+1);
         for (int i = 0; i < regresi.row; i++){
             for (int j = 0; j < regresi.col; j++){
@@ -754,11 +767,11 @@ public class Matrix {
         System.out.println(ans);
         double y = result.contents[0][0];
         for (int i = 1; i < result.row; i++){
-            y += result.contents[i][0]*variables[i-1];
+            y += result.contents[i][0]*peubah[i-1];
         }
         String ans1 = "f(";
         for (int i = 0; i < this.col-1; i++){
-            ans1 += variables[i];
+            ans1 += peubah[i];
             if (i != this.col-2){
                 ans1 += ",";
             }
@@ -776,6 +789,7 @@ public class Matrix {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
             Scanner s1 = new Scanner(System.in);
             File text = new File("../test/" + s1.nextLine());
+            s1.close();
             saveToFile(text,s);
         }
         sv.close();
