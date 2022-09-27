@@ -34,12 +34,6 @@ public class Matrix {
         return this.col;
     }
 
-    void setMatrixDim(int row, int col) {
-    /* Assign jumlah baris dan kolom pada Matrix */
-        this.row = row;
-        this.col = col;
-    }
-
     /* *** READ, DISPLAY, SAVE TO FILE *** */
     void readMatrix() {
     /* Membaca matrix dari input keyboard */
@@ -50,7 +44,6 @@ public class Matrix {
                 this.contents[i][j] = x;
             }
         }
-        in.close();
     }
 
     void readMatrix2(File text) {
@@ -390,7 +383,23 @@ public class Matrix {
     }
 
     void SPLGaussJordan() {
-        
+        this.GaussJordanOBE();
+        int row = this.row - 1;
+        int col = this.col - 1;
+        Matrix mResult = new Matrix(this.row, 1);
+        if (this.contents[row][col - 1] != 0 && this.contents[row][col] != 0 && this.row == this.col - 1) {
+            // single solution
+            for (int i = 0; i < row; i++) {
+                mResult.setELMT(this.contents[i][i], i, 0);
+            }
+            mResult.displaySPL();
+        } else if (isRowZero(row) && this.contents[row][col] != 0) {
+            // no solution
+            System.out.println("SPL tidak memiliki solusi");
+        } else {
+            // many solution
+            this.parametric();
+        }
     }
 
     void SPLKaidahCramer() {
@@ -651,7 +660,7 @@ public class Matrix {
     }
 
     /* Interpolasi Polinom */
-    void Interpolasi(double x){
+    void interpolasi(double x){
         Matrix mI = new Matrix(this.row, this.row+1);
         for (int i = 0; i < mI.row; i++){
             for (int j = 0; j < mI.row; j++){
@@ -676,9 +685,21 @@ public class Matrix {
         }
         System.out.println(ans);
         System.out.println("f(" + x + ")=" + y);
+
+        String s = ans + "\n" + "f(" + x + ")=" + y;
+        Scanner sv = new Scanner(System.in);
+        System.out.print("Apakah anda ingin menyimpan hasil dalam file(1:ya, 2:tidak): ");
+        int choice = sv.nextInt();
+        if (choice == 1){
+            System.out.print("Masukkan nama file beserta extension(.txt): ");
+            Scanner s1 = new Scanner(System.in);
+            File text = new File("../test/" + s1.nextLine());
+            saveToFile(text,s);
+        }
+        sv.close();
     }
     /* Interpolasi Bikubik */   
-    void InterpolasiBikubik(Double a, Double b){
+    void interpolasiBikubik(Double a, Double b){
         Matrix X = new Matrix(16,16);
         for (int i = 0; i < 16; i++){
             for (int j = 0; j < 16; j++){
@@ -695,4 +716,68 @@ public class Matrix {
         System.out.println("f(" + a + "," + b + ") = " + f.getELMT(0,0));
     }
     /* Regresi Linier Berganda */
+    void regresi(Double[] variables){
+        Matrix regresi = new Matrix(this.col,this.col+1);
+        for (int i = 0; i < regresi.row; i++){
+            for (int j = 0; j < regresi.col; j++){
+                if (i == 0 && j == 0){
+                    regresi.setELMT(this.row,0,0);
+                }
+                else if (i == 0){
+                    Double sum = 0.0;
+                    for (int k = 0; k < this.row; k++){
+                        sum += this.contents[k][j-1];
+                    }
+                    regresi.contents[i][j] = sum;
+                    if (j < regresi.row){
+                        regresi.contents[j][0] = sum;
+                    }
+                }
+                else if (j!=0){
+                    Double sum = 0.0;
+                    for (int k = 0; k < this.row; k++){
+                        sum += this.contents[k][j-1]*this.contents[k][i-1];
+                    }
+                    regresi.contents[i][j] = sum;
+                }
+            }            
+        }
+        Matrix result = regresi.mSPL();
+        String ans = "y = ";
+        ans += result.contents[0][0];
+        for (int i = 1; i < result.row; i++){
+            if (result.contents[i][0] > 0.0){
+                ans += " +";
+            }
+            ans += " " + result.contents[i][0] + "x" + i;
+        }
+        System.out.println(ans);
+        double y = result.contents[0][0];
+        for (int i = 1; i < result.row; i++){
+            y += result.contents[i][0]*variables[i-1];
+        }
+        String ans1 = "f(";
+        for (int i = 0; i < this.col-1; i++){
+            ans1 += variables[i];
+            if (i != this.col-2){
+                ans1 += ",";
+            }
+            else{
+                ans1 += ") = " + y;
+            }
+        }
+        System.out.println(ans1);
+        
+        String s = ans + "\n" + ans1;
+        Scanner sv = new Scanner(System.in);
+        System.out.print("Apakah anda ingin menyimpan hasil dalam file(1:ya, 2:tidak): ");
+        int choice = sv.nextInt();
+        if (choice == 1){
+            System.out.print("Masukkan nama file beserta extension(.txt): ");
+            Scanner s1 = new Scanner(System.in);
+            File text = new File("../test/" + s1.nextLine());
+            saveToFile(text,s);
+        }
+        sv.close();
+    }
 }

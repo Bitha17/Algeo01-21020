@@ -1,16 +1,17 @@
-import java.util.Scanner;
+import java.util.*;
+import java.io.*;
 
 public class check {
     public static void main(String[] args) {
-        int m, n;
+        // int m, n;
         Scanner in = new Scanner(System.in);
-        System.out.println("Masukan jumlah baris pada matriks: ");
-        m = in.nextInt();
-        System.out.println("Masukan jumlah kolom pada matriks: ");
-        n = in.nextInt();
-        Matrix M = new Matrix(m, n);
-        M.readMatrix(); // RIGHT
-        in.close();
+        // System.out.println("Masukan jumlah baris pada matriks: ");
+        // m = in.nextInt();
+        // System.out.println("Masukan jumlah kolom pada matriks: ");
+        // n = in.nextInt();
+        // Matrix M = new Matrix(m, n);
+        // M.readMatrix(); // RIGHT
+        // in.close();
         // int o;
         // System.out.println("Masukan jumlah baris pada matriks: ");
         // o = in.nextInt();
@@ -25,12 +26,30 @@ public class check {
         M.displayMatrix(); // RIGHT */
         // M.SPLKaidahCramer();
         // Matrix mTemp = new Matrix(M.getMatrixRow(), M.getMatrixCol());
-        // mTemp = M.inverseOBE();
+        // mTemp = M.inverseOBE(); 
         // mTemp.displayMatrix();
-        M.GaussJordanOBE();
-        M.displayMatrix();
-        M.parametric();
+        // M.GaussJordanOBE();
+        // M.displayMatrix();
+        // M.parametric();
         // M.GaussJordanOBE();
         // MInterpolasi();
+
+        
+        System.out.print("Masukkan n jumlah peubah x: ");
+        int col = in.nextInt() + 1;
+        System.out.println(col);
+        System.out.print("Masukkan m jumlah sampel: ");
+        int row = in.nextInt();
+        System.out.println(row);
+        Matrix matrix = new Matrix(row,col);        
+        matrix.readMatrix();
+        System.out.println("Matriks yang dimasukkan: ");
+        matrix.displayMatrix();
+        Double[] variables = new Double[matrix.getMatrixCol()-1];
+        for (int i = 1; i < matrix.getMatrixCol(); i++){
+            System.out.print("Masukkan nilai x" + i + ":");
+            variables[i-1] = in.nextDouble();
+        }
+        matrix.regresi(variables);
     }
 }
