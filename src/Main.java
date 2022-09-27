@@ -3,8 +3,8 @@ import java.io.*;
 
 public class Main {
 
+  public static final Scanner in = new Scanner(System.in);
   public static void main(String[] args) {
-    Scanner in = new Scanner(System.in);
     System.out.println("Aplikasi Pengolah Matrix");
     System.out.println();
 
@@ -31,14 +31,13 @@ public class Main {
             int row = in.nextInt();
             int col = in.nextInt();
             matrix.setMatrixDim(row, col);
-            ;
             matrix.readMatrix();
             System.out.println("Matriks yang dimasukkan: ");
             matrix.displayMatrix();
           } else {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
-            Scanner s1 = new Scanner(System.in);
-            File text = new File("../test/" + s1.nextLine());
+            // Scanner in = new Scanner(System.in);
+            File text = new File("../test/" + in.nextLine());
             System.out.print("Masukkan ukuran matriks m(baris) n(kolom): ");
             int row = in.nextInt();
             int col = in.nextInt();
@@ -46,7 +45,7 @@ public class Main {
             matrix.readMatrix2(text);
             System.out.println("Matriks yang dimasukkan: ");
             matrix.displayMatrix();
-            s1.close();
+            // in.close();
           }
 
           System.out.println("Daftar metode penyelesaian matriks.");
@@ -100,15 +99,13 @@ public class Main {
             matrix.displayMatrix();
           } else {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
-            Scanner s1 = new Scanner(System.in);
-            File text = new File("../test/" + s1.nextLine());
+            File text = new File("../test/" + in.nextLine());
             System.out.print("Masukkan ukuran matriks n(baris & kolom): ");
             int row = in.nextInt();
             matrix.setMatrixDim(row, row);
             matrix.readMatrix2(text);
             System.out.println("Matriks yang dimasukkan: ");
             matrix.displayMatrix();
-            s1.close();
           }
 
           System.out.println("Penyelesaian determinan matriks menggunakan : ");
@@ -152,8 +149,7 @@ public class Main {
             matrix.displayMatrix();
           } else {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
-            Scanner s1 = new Scanner(System.in);
-            File text = new File("../test/" + s1.nextLine());
+            File text = new File("../test/" + in.nextLine());
             System.out.print("Masukkan ukuran matriks n(baris dan kolom): ");
             int row = in.nextInt();
             int col = in.nextInt();
@@ -164,7 +160,6 @@ public class Main {
             matrix.inverseOBE();
             int temp1 = menuSave();
             matrix.matrixToFile(temp1);
-            s1.close();
           }
           printMenu2();
           choice = in.nextInt();
@@ -185,16 +180,14 @@ public class Main {
             matrix.interpolasi(x);
           } else {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
-            Scanner s1 = new Scanner(System.in);
-            File text = new File("../test/" + s1.nextLine());
+            File text = new File("../test/" + in.nextLine());
             System.out.print("Masukkan jumlah sampel: ");
             int row = in.nextInt();
             matrix.setMatrixDim(row, row);
             matrix.readMatrix2(text);
             System.out.println("Matriks yang dimasukkan: ");
             matrix.displayMatrix();
-            Double x = s1.nextDouble();
-            s1.close();
+            Double x = in.nextDouble();
             matrix.interpolasi(x);
           }
           printMenu2();
@@ -219,12 +212,10 @@ public class Main {
             matrix.interpolasiBikubik(a, b);
           } else {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
-            Scanner s1 = new Scanner(System.in);
-            File text = new File("../test/" + s1.nextLine());
+            File text = new File("../test/" + in.nextLine());
             Double a = 0.0, b = 0.0;
             matrix.readMatrix3(text, a, b);
             matrix.interpolasiBikubik(a, b);
-            s1.close();
           }
           printMenu2();
           choice = in.nextInt();
@@ -250,9 +241,8 @@ public class Main {
             matrix.regresi(variables);
           } else {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
-            Scanner s1 = new Scanner(System.in);
-            File text = new File("../test/" + s1.nextLine());
-            s1.close();
+            File text = new File("../test/" + in.nextLine());
+            in.close();
             System.out.print("Masukkan n jumlah peubah x: ");
             int col = in.nextInt() + 1;
             System.out.print("Masukkan m jumlah sampel: ");
@@ -277,7 +267,6 @@ public class Main {
           }
           printMenu2();
           choice = in.nextInt();
-          in.close();
           break;
 
         case 7:
@@ -288,7 +277,7 @@ public class Main {
           } else {
             printMenu2();
             choice = in.nextInt();
-            in.close();
+
           }
           break;
 
@@ -296,17 +285,15 @@ public class Main {
           System.out.println("Pilihan yang Anda masukan tidak ada dalam menu!");
           printMenu2();
           choice = in.nextInt();
-          in.close();
           break;
       }
     }
+    in.close();
   }
 
   public static int menuSave() {
-    Scanner sv = new Scanner(System.in);
     System.out.print("Apakah anda ingin menyimpan hasil dalam file(1:ya, 2:tidak): ");
-    int choice = sv.nextInt();
-    sv.close();
+    int choice = in.nextInt();
     return choice;
   }
 
@@ -318,15 +305,12 @@ public class Main {
   }
 
   static void acceptMatrix(Matrix m) {
-    Scanner in = new Scanner(System.in);
     System.out.print("Masukkan ukuran matriks n(baris dan kolom): ");
     int row = in.nextInt();
-    int col = in.nextInt();
-    m.setMatrixDim(row, col);
+    m.setMatrixDim(row, row);
     m.readMatrix();
     System.out.println("Matriks yang dimasukkan: ");
     m.displayMatrix();
-    in.close();
   }
 
   static void printMenu2() {

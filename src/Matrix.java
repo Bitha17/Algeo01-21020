@@ -5,7 +5,7 @@ import java.lang.Math;
 public class Matrix {
     private int row, col;
     private double[][] contents;
-
+    public static final Scanner in = new Scanner(System.in);
     /* *** CONSTRUCTOR *** */
     Matrix(int m, int n) {
         this.row = m;
@@ -27,6 +27,7 @@ public class Matrix {
     void setMatrixDim(int row, int col) {
         this.row = row;
         this.col = col;
+        this.contents = new double[row][col];
     }
 
     int getMatrixRow() {
@@ -42,14 +43,12 @@ public class Matrix {
     /* *** READ, DISPLAY, SAVE TO FILE *** */
     void readMatrix() {
         /* Membaca matrix dari input keyboard */
-        Scanner in = new Scanner(System.in);
         for (int i = 0; i < this.row; i++) {
             for (int j = 0; j < this.col; j++) {
                 double x = in.nextDouble();
                 this.contents[i][j] = x;
             }
         }
-        in.close();
     }
 
     void readMatrix2(File text) {
@@ -106,7 +105,6 @@ public class Matrix {
     void matrixToFile(int choice) {
         /* Menyimpan matrix ke dalam file */
         try {
-            Scanner in = new Scanner(System.in);
             if (choice == 1) {
                 System.out.print("Masukkan nama file beserta extension(.txt): ");
                 FileWriter writer = new FileWriter("../test/" + in.nextLine());
@@ -130,7 +128,6 @@ public class Matrix {
     void detToFile(int choice, double det) {
         /* Menyimpan hasil perhitungan determinan matriks ke dalam file */
         try {
-            Scanner in = new Scanner(System.in);
             if (choice == 1) {
                 System.out.print("Masukkan nama file beserta extension(.txt): ");
                 FileWriter writer = new FileWriter("../test/" + in.nextLine());
@@ -699,17 +696,13 @@ public class Matrix {
         System.out.println("f(" + x + ")=" + y);
 
         String s = ans + "\n" + "f(" + x + ")=" + y;
-        Scanner sv = new Scanner(System.in);
         System.out.print("Apakah anda ingin menyimpan hasil dalam file(1:ya, 2:tidak): ");
-        int choice = sv.nextInt();
+        int choice = in.nextInt();
         if (choice == 1) {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
-            Scanner s1 = new Scanner(System.in);
-            File text = new File("../test/" + s1.nextLine());
+            File text = new File("../test/" + in.nextLine());
             saveToFile(text, s);
-            s1.close();
         }
-        sv.close();
     }
 
     /* Interpolasi Bikubik */
@@ -730,17 +723,13 @@ public class Matrix {
         String s = "f(" + a + "," + b + ") = " + f.getELMT(0, 0);
         System.out.println(s);
 
-        Scanner sv = new Scanner(System.in);
         System.out.print("Apakah anda ingin menyimpan hasil dalam file(1:ya, 2:tidak): ");
-        int choice = sv.nextInt();
+        int choice = in.nextInt();
         if (choice == 1) {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
-            Scanner s1 = new Scanner(System.in);
-            File text = new File("../test/" + s1.nextLine());
+            File text = new File("../test/" + in.nextLine());
             saveToFile(text, s);
-            s1.close();
         }
-        sv.close();
     }
 
     /* Regresi Linier Berganda */
@@ -794,16 +783,12 @@ public class Matrix {
         System.out.println(ans1);
 
         String s = ans + "\n" + ans1;
-        Scanner sv = new Scanner(System.in);
         System.out.print("Apakah anda ingin menyimpan hasil dalam file(1:ya, 2:tidak): ");
-        int choice = sv.nextInt();
+        int choice = in.nextInt();
         if (choice == 1) {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
-            Scanner s1 = new Scanner(System.in);
-            File text = new File("../test/" + s1.nextLine());
-            s1.close();
+            File text = new File("../test/" + in.nextLine());
             saveToFile(text, s);
         }
-        sv.close();
     }
 }
