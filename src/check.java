@@ -27,7 +27,10 @@ public class check {
         // Matrix mTemp = new Matrix(M.getMatrixRow(), M.getMatrixCol());
         // mTemp = M.inverseOBE();
         // mTemp.displayMatrix();
-        M.Interpolasi();
+        M.GaussJordanOBE();
+        M.displayMatrix();
+        M.parametric();
+        // M.GaussJordanOBE();
         // MInterpolasi();
     }
 }

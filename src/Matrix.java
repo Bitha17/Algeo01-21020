@@ -34,6 +34,12 @@ public class Matrix {
         return this.col;
     }
 
+    void setMatrixDim(int row, int col) {
+    /* Assign jumlah baris dan kolom pada Matrix */
+        this.row = row;
+        this.col = col;
+    }
+
     /* *** READ, DISPLAY, SAVE TO FILE *** */
     void readMatrix() {
     /* Membaca matrix dari input keyboard */
@@ -54,9 +60,26 @@ public class Matrix {
             for (int i = 0; i < this.row; i++){
                 for (int j = 0; j < this.col; j++){
                     double x = in.nextDouble();
-                    setELMT(x, row, col);
+                    setELMT(x, i, j);
                 }
             }
+            in.close();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    void readMatrix3(File text, double a, double b) {
+    /* Membaca input dari file untuk Interpolasi Bicubic */
+        try { 
+            Scanner in = new Scanner(text);
+            for (int i = 0; i < 16; i++){
+                    double x = in.nextDouble();
+                    setELMT(x, i, 0);
+            }
+            a = in.nextDouble();
+            b = in.nextDouble();
             in.close();
         }
         catch (Exception ex) {
@@ -81,18 +104,26 @@ public class Matrix {
         }
     }
 
-    void matrixToFile(File output) {
+    void matrixToFile(int choice) {
     /* Menyimpan matrix ke dalam file */
         try{
-            FileWriter writer = new FileWriter(output);
-            for (int i = 0; i < this.row; i++){
-                for (int j = 0; j < this.col; j++){
-                    writer.write(Double.toString(this.contents[i][j]) + " ");
+            Scanner in = new Scanner(System.in);
+            if (choice == 1) {
+                System.out.print("Masukkan nama file beserta extension(.txt): ");
+                FileWriter writer = new FileWriter("../test/" + in.nextLine());
+                for (int i = 0; i < this.row; i++) {
+                    for (int j = 0; j < this.col; j++) {
+                        writer.write(Double.toString(this.contents[i][j]) + " ");
+                    }
+                    writer.write("\n");
                 }
-                writer.write("\n");
+                System.out.println("File telah berhasil dibuat!\n");
+                writer.close();
+            } 
+            else {
+                System.out.println("");
             }
-            System.out.println("File berhasil dibuat");
-            writer.close();
+            in.close();
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -245,6 +276,13 @@ public class Matrix {
                 }
             }
         }
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.col; j++) {
+                if (this.contents[i][j] == -0.0) {
+                    this.contents[i][j] = 0.0;
+                }
+            }
+        }
     }
     
     /* *** SPL *** */
@@ -345,38 +383,14 @@ public class Matrix {
             }
             mResult.displaySPL();
         } else if (manySolution) {
-            this.GaussJordanOBE();
-            Boolean allElZero[] = new Boolean[this.row];
-            Boolean colOne[] = new Boolean[this.row];
-            for (int i = 0; i < this.row; i++) {
-                allElZero[i] = true;
-            } 
-            for (int i = 0; i < this.row; i++) {
-                if (!(this.isRowZero(i))) {
-                    allElZero[i] = false;
-                    break; 
-                }
-            }
-            for (int i = 0; i < this.row; i++) {
-                colOne[i] = false;
-            }
-            // Searching for the column that has leading entry
-            for (int i = 0; i < this.row; i++) {
-                for (int j = 0; j < this.row; j++) {
-                    if (this.contents[i][j] == 1) {
-                        colOne[j] = true;
-                        break;
-                    }
-                }
-            }
-            
+            this.parametric();
         } else if (noSolution) {
             System.out.println("SPL tidak memiliki solusi");
         }
     }
 
     void SPLGaussJordan() {
-
+        
     }
 
     void SPLKaidahCramer() {
@@ -408,10 +422,95 @@ public class Matrix {
     }
 
     /* *** Parametric Solution Case Handle *** */
-    void parametric() {
-        
+    int countRowOne(int i) {
+        int count = 0;
+        for (int j = 0; j < this.row; i++) {
+            if (this.contents[i][j] == 1) {
+                count++;
+            }
+        }
+        return count;
     }
 
+    void parametric() {
+        this.GaussJordanOBE();
+        Boolean[] isAllZero = new Boolean[this.row];
+        Boolean[] konstanta = new Boolean[this.row];
+        for (int i = 0; i < this.row; i++) {
+            isAllZero[i] = true;
+        }
+        for (int i = 0; i < this.row; i++) {
+            konstanta[i] = false;
+            if (!isRowZero(i)) {
+                isAllZero[i] = false;
+                break;
+            }
+        }
+        for (int i = 0; i < this.row; i++) {
+            konstanta[i] = false;
+        }
+
+        // Searching for the column that has leading entry
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.row; j++) {
+                if (this.contents[i][j] == 1) {
+                    konstanta[j] = true;
+                    break;
+                }
+           }
+        }   
+
+        for (int i = 0; i < this.row; i++) {
+            if (konstanta[i] == true) {
+                for (int j = i + 1; j < this.row; j++) {
+                    konstanta[j] = false;
+                }
+            }
+        }
+    
+        String[] result = new String[this.row];
+        for (int k = 0; k < this.row; k++) {
+            result[k] = "0.0 ";
+        }
+
+        int count = 0;
+        for (int j = 0; j < this.row; j++) {
+            if (!konstanta[j]) {
+                String elemen = new Character((char) (97 + count)).toString(); 
+                result[j] = elemen;
+                count++;
+            }
+        }
+
+        for (int i = 0; i < this.row; i++) {
+            if (!isAllZero[i]) {
+                int notZero = -9999;
+                for (int j = 0; j < this.row; j++) {
+                    if (this.contents[i][j] == 1) {
+                        notZero = j;
+                        break;
+                    }
+                }
+
+                result[notZero] = (this.contents[i][this.col - 1] != 0 ? (this.contents[i][this.col - 1] + " ") : "0.0 ");  
+                for (int j = notZero + 1; j < this.row; j++) {
+                    if (this.contents[i][j] != 0) {
+                        if (this.contents[i][j] < 0) {
+                            result[notZero] += ("+ " + (this.contents[i][j] * (-1)) + result[j] + " ");
+                        } else {
+                            result[notZero] += ("- " + (this.contents[i][j]) + result[j] + " ");
+                        }
+                    }
+                }
+            }
+        }
+
+        
+        // Print solusi 
+        for (int i = 0; i < this.row; i++) {
+            System.out.println("x" + (i+1) + " = " + result[i]);
+        }
+    }
 
     /* *** DETERMINAN *** */
     double detCofactor(){
@@ -552,7 +651,7 @@ public class Matrix {
     }
 
     /* Interpolasi Polinom */
-    void Interpolasi(){
+    void Interpolasi(double x){
         Matrix mI = new Matrix(this.row, this.row+1);
         for (int i = 0; i < mI.row; i++){
             for (int j = 0; j < mI.row; j++){
@@ -560,9 +659,7 @@ public class Matrix {
             }
             mI.setELMT(this.contents[i][1], i, this.row);
         }
-        mI.displayMatrix();
         Matrix mO = mI.mSPL();
-        mO.displayMatrix();
         String ans = "y = ";
         ans += mO.contents[0][0];
         for (int i = 1; i < mI.row; i++){
@@ -573,6 +670,29 @@ public class Matrix {
                 ans += " + " + mO.contents[i][0] + "x**" + i;
             }
         }
+        double y = 0;
+        for (int i = 0; i < mI.row; i++){
+            y += mO.getELMT(i,0)*Math.pow(x,i);
+        }
         System.out.println(ans);
+        System.out.println("f(" + x + ")=" + y);
     }
+    /* Interpolasi Bikubik */   
+    void InterpolasiBikubik(Double a, Double b){
+        Matrix X = new Matrix(16,16);
+        for (int i = 0; i < 16; i++){
+            for (int j = 0; j < 16; j++){
+                X.setELMT(Math.pow((i%4)-1,j%4)*Math.pow((i/4)-1,j/4),i,j);
+            }
+        }
+        X.inverseOBE();
+        Matrix mResult = multiplyMatrix(X,this);
+        Matrix Xab = new Matrix(1,16);
+        for (int i = 0; i < 16; i++){
+            Xab.setELMT(Math.pow(a,i%4)*Math.pow(b,i/4), 0, i);
+        }
+        Matrix f = multiplyMatrix(Xab,mResult);
+        System.out.println("f(" + a + "," + b + ") = " + f.getELMT(0,0));
+    }
+    /* Regresi Linier Berganda */
 }
