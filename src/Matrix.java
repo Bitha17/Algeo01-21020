@@ -119,7 +119,6 @@ public class Matrix {
             } else {
                 System.out.println("");
             }
-            in.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
