@@ -453,6 +453,9 @@ public class Matrix {
     }
 
     void parametric() {
+        String[] parametrik = {"a", "b", "c", "d", "e", "f", "g", "h",
+        "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u",
+        "v", "w", "x", "y", "z"};
         this.GaussJordanOBE();
         Boolean[] isAllZero = new Boolean[this.row];
         Boolean[] konstanta = new Boolean[this.row];
@@ -493,12 +496,12 @@ public class Matrix {
             result[k] = "0.0 ";
         }
 
-        int count = 0;
+        int k = 0;
         for (int j = 0; j < this.row; j++) {
             if (!konstanta[j]) {
                 // String elemen = new Character((char) (97 + count)).toString();
-                result[j] = Character.toString(count + 97);
-                count++;
+                result[j] = parametrik[k];
+                k++;
             }
         }
 
