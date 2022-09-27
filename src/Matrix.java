@@ -5,7 +5,7 @@ import java.lang.Math;
 public class Matrix {
     private int row, col;
     private double[][] contents;
-    
+
     /* *** CONSTRUCTOR *** */
     Matrix(int m, int n) {
         this.row = m;
@@ -15,34 +15,36 @@ public class Matrix {
 
     /* *** SELECTOR *** */
     double getELMT(int row, int col) {
-    /* Mengirimkan element Matrix(row,col) */
+        /* Mengirimkan element Matrix(row,col) */
         return this.contents[row][col];
     }
 
     void setELMT(double x, int row, int col) {
-    /* Melakukan assignment Matrix(row,col) <- x */
+        /* Melakukan assignment Matrix(row,col) <- x */
         this.contents[row][col] = x;
     }
-    void setMatrixDim(int row, int col){
+
+    void setMatrixDim(int row, int col) {
         this.row = row;
         this.col = col;
     }
+
     int getMatrixRow() {
-    /* Mengirimkan jumlah baris pada Matrix */
+        /* Mengirimkan jumlah baris pada Matrix */
         return this.row;
     }
 
     int getMatrixCol() {
-    /* Mengirimkan jumlah kolom pada Matrix */
+        /* Mengirimkan jumlah kolom pada Matrix */
         return this.col;
     }
 
     /* *** READ, DISPLAY, SAVE TO FILE *** */
     void readMatrix() {
-    /* Membaca matrix dari input keyboard */
+        /* Membaca matrix dari input keyboard */
         Scanner in = new Scanner(System.in);
-        for (int i = 0; i < this.row; i++){
-            for (int j = 0; j < this.col; j++){
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.col; j++) {
                 double x = in.nextDouble();
                 this.contents[i][j] = x;
             }
@@ -51,43 +53,43 @@ public class Matrix {
     }
 
     void readMatrix2(File text) {
-    /* Membaca matrix dari file */
-        try { 
+        /* Membaca matrix dari file */
+        try {
             Scanner in = new Scanner(text);
-            for (int i = 0; i < this.row; i++){
-                for (int j = 0; j < this.col; j++){
+            for (int i = 0; i < this.row; i++) {
+                for (int j = 0; j < this.col; j++) {
                     double x = in.nextDouble();
                     setELMT(x, i, j);
                 }
             }
             in.close();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-    
+
     void readMatrix3(File text, double a, double b) {
-    /* Membaca input dari file untuk Interpolasi Bicubic */
-        try { 
+        /* Membaca input dari file untuk Interpolasi Bicubic */
+        try {
             Scanner in = new Scanner(text);
-            for (int i = 0; i < 16; i++){
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
                     double x = in.nextDouble();
-                    setELMT(x, i, 0);
+                    this.setELMT(x, j * 4 + i, 0);
+                }
             }
             a = in.nextDouble();
             b = in.nextDouble();
             in.close();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
     void displayMatrix() {
-    /* Menampilkan matrix ke layar */
-        for (int i = 0; i < this.row; i++){
-            for (int j = 0; j < this.col; j++){
+        /* Menampilkan matrix ke layar */
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.col; j++) {
                 System.out.print(this.contents[i][j] + " ");
             }
             System.out.println();
@@ -95,15 +97,15 @@ public class Matrix {
     }
 
     void displaySPL() {
-    /* Menampilkan matrix penyelesaian SPL  */
-        for (int i = 1; i <= this.row; i++){
-            System.out.println("X" + i + "=" + this.contents[i-1][0]);
+        /* Menampilkan matrix penyelesaian SPL */
+        for (int i = 1; i <= this.row; i++) {
+            System.out.println("X" + i + "=" + this.contents[i - 1][0]);
         }
     }
 
     void matrixToFile(int choice) {
-    /* Menyimpan matrix ke dalam file */
-        try{
+        /* Menyimpan matrix ke dalam file */
+        try {
             Scanner in = new Scanner(System.in);
             if (choice == 1) {
                 System.out.print("Masukkan nama file beserta extension(.txt): ");
@@ -116,20 +118,18 @@ public class Matrix {
                 }
                 System.out.println("File telah berhasil dibuat!");
                 writer.close();
-            } 
-            else {
+            } else {
                 System.out.println("");
             }
             in.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     void detToFile(int choice, double det) {
-    /* Menyimpan hasil perhitungan determinan matriks ke dalam file */
-        try{
+        /* Menyimpan hasil perhitungan determinan matriks ke dalam file */
+        try {
             Scanner in = new Scanner(System.in);
             if (choice == 1) {
                 System.out.print("Masukkan nama file beserta extension(.txt): ");
@@ -137,52 +137,49 @@ public class Matrix {
                 writer.write("Determinan = " + Double.toString(det) + "\n");
                 System.out.println("File telah berhasil dibuat!");
                 writer.close();
-            } 
-            else {
+            } else {
                 System.out.println("");
             }
             in.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    void saveToFile(File output, String s){
-    /* Menyimpan hasil lain-lain ke dalam file */
-        try{
+    void saveToFile(File output, String s) {
+        /* Menyimpan hasil lain-lain ke dalam file */
+        try {
             FileWriter writer = new FileWriter(output);
             writer.write(s + "\n");
             System.out.println("File berhasil dibuat");
             writer.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     /* *** OPERATIONS *** */
-    Matrix multiplyMatrix(Matrix m1, Matrix m2){
-    /* Prekondisi : Ukuran kolom efektif m1 = ukuran baris efektif m2 */
-    /* Mengirim hasil perkalian matriks: salinan m1 * m2 */
+    Matrix multiplyMatrix(Matrix m1, Matrix m2) {
+        /* Prekondisi : Ukuran kolom efektif m1 = ukuran baris efektif m2 */
+        /* Mengirim hasil perkalian matriks: salinan m1 * m2 */
         Matrix m3 = new Matrix(m1.getMatrixRow(), m2.getMatrixCol());
-        for (int i = 0; i < m3.row; i++){
-            for (int j = 0; j < m3.col; j++){
+        for (int i = 0; i < m3.row; i++) {
+            for (int j = 0; j < m3.col; j++) {
                 double temp = 0.0;
-                for (int k = 0; k < m1.getMatrixCol(); k++){
-                    temp += (m1.getELMT(i,k) * m2.getELMT(k,j));
+                for (int k = 0; k < m1.getMatrixCol(); k++) {
+                    temp += (m1.getELMT(i, k) * m2.getELMT(k, j));
                 }
-                m3.setELMT(temp,i,j);
+                m3.setELMT(temp, i, j);
             }
         }
         return m3;
     }
 
-    void multiplyConst(double konstanta){
-    /* I.S. m terdefinisi, k terdefinisi */
-    /* F.S. Mengalikan setiap elemen m dengan k */
-        for (int i = 0; i < this.row; i++){
-            for (int j = 0; j < this.col; j++){
+    void multiplyConst(double konstanta) {
+        /* I.S. m terdefinisi, k terdefinisi */
+        /* F.S. Mengalikan setiap elemen m dengan k */
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.col; j++) {
                 this.contents[i][j] *= konstanta;
             }
         }
@@ -200,7 +197,7 @@ public class Matrix {
         }
         return m;
     }
-    
+
     Boolean isRowZero(int row) {
         for (int i = 0; i < this.row; i++) {
             if (this.contents[row][i] != 0) {
@@ -211,10 +208,10 @@ public class Matrix {
     }
 
     /* *** OBE *** */
-    void GaussOBE() { 
-        int i, j; 
+    void GaussOBE() {
+        int i, j;
         i = 0;
-        j = 0;       
+        j = 0;
         while (j < this.row) {
             Boolean searchForOne = false;
             if (this.contents[i][j] == 0) {
@@ -226,9 +223,9 @@ public class Matrix {
                         for (int k = 0; k < this.col; k++) {
                             double temp = this.contents[nextRow][k];
                             this.contents[nextRow][k] = this.contents[i][k];
-                            this.contents[i][k] = temp; 
+                            this.contents[i][k] = temp;
                         }
-                    } 
+                    }
                     nextRow++;
                 }
             }
@@ -289,32 +286,34 @@ public class Matrix {
             }
         }
     }
-    
+
     /* *** SPL *** */
-    /* Solusi SPL dengan metode Inverse, GaussEquation, GaussJordanEquation, dan Kaidah Crammer */
+    /*
+     * Solusi SPL dengan metode Inverse, GaussEquation, GaussJordanEquation, dan
+     * Kaidah Crammer
+     */
     void SPLInverse() {
         if (this.row != this.col - 1) {
             System.out.println("SPL tidak dapat diselesaikan dengan metode invers");
         } else {
             Matrix mTemp, mB, mResult;
             /* Menyimpan matriks A */
-            mTemp = new Matrix(this.row, this.col-1);
+            mTemp = new Matrix(this.row, this.col - 1);
             /* Menyimpan array B */
             mB = new Matrix(this.row, 1);
             /* Array hasil solusi x */
-            mResult = new Matrix(this.row, 1); 
+            mResult = new Matrix(this.row, 1);
             for (int i = 0; i < this.row; i++) {
-                for (int j = 0; j < this.col-1; j++) {
+                for (int j = 0; j < this.col - 1; j++) {
                     mTemp.setELMT(this.contents[i][j], i, j);
                 }
-            } 
+            }
             if (mTemp.detCofactor() == 0.0) {
                 System.out.println("Matrix tidak memiliki inverse, tidak dapat menemukan solusi SPL dengan inverse!");
-            }
-            else {
+            } else {
                 mTemp = mTemp.inverseOBE();
                 for (int i = 0; i < this.row; i++) {
-                    mB.setELMT(this.contents[i][this.col-1], i, 0);
+                    mB.setELMT(this.contents[i][this.col - 1], i, 0);
                 }
                 mResult = multiplyMatrix(mTemp, mB);
                 // mResult.multiplyConst(1/mTemp.detCofactor());
@@ -326,19 +325,19 @@ public class Matrix {
     Matrix mSPL() {
         Matrix mTemp, mB, mResult;
         /* Menyimpan matriks A */
-        mTemp = new Matrix(this.row, this.col-1);
+        mTemp = new Matrix(this.row, this.col - 1);
         /* Menyimpan array B */
         mB = new Matrix(this.row, 1);
         /* Array hasil solusi x */
-        mResult = new Matrix(this.row, 1); 
+        mResult = new Matrix(this.row, 1);
         for (int i = 0; i < this.row; i++) {
-            for (int j = 0; j < this.col-1; j++) {
+            for (int j = 0; j < this.col - 1; j++) {
                 mTemp.setELMT(this.contents[i][j], i, j);
             }
-        } 
+        }
         mTemp = mTemp.inverseOBE();
         for (int i = 0; i < this.row; i++) {
-            mB.setELMT(this.contents[i][this.col-1], i, 0);
+            mB.setELMT(this.contents[i][this.col - 1], i, 0);
         }
         mResult = multiplyMatrix(mTemp, mB);
         // mResult.multiplyConst(1/mTemp.detCofactor());
@@ -357,29 +356,29 @@ public class Matrix {
         row = this.row - 1;
         col = this.col - 1;
         // Check for single solution
-        if (this.contents[row][col-1] != 0 && this.contents[row][col] != 0 && this.row == this.col - 1) {
-            singleSolution = true; 
+        if (this.contents[row][col - 1] != 0 && this.contents[row][col] != 0 && this.row == this.col - 1) {
+            singleSolution = true;
         } else {
             manySolution = true;
-        } 
-        
+        }
+
         // Check for no solution
         for (int i = 0; i <= row; i++) {
             if (this.isRowZero(i) && this.contents[i][col] != 0) {
                 noSolution = true;
                 manySolution = false;
-                singleSolution = false; // double check 
+                singleSolution = false; // double check
             }
         }
 
         // Melakukan penyulihan mundur
         if (singleSolution) {
             double x = this.contents[row][col];
-            double xlast = x / this.contents[row][col-1]; 
+            double xlast = x / this.contents[row][col - 1];
             mResult.setELMT(xlast, row, 0);
             double prevX = xlast;
             for (int i = row - 1; i >= 0; i--) {
-                for (int j = col-1; j > row; j--) {
+                for (int j = col - 1; j > row; j--) {
                     x = this.contents[i][col];
                     x -= this.contents[i][j] * prevX;
                     prevX = x;
@@ -429,13 +428,13 @@ public class Matrix {
                 }
             }
             int j = 0;
-            while (j < this.col-1) {
+            while (j < this.col - 1) {
                 for (int i = 0; i < this.row; i++) {
-                    mDet.setELMT(this.contents[i][this.col-1], i, j);
+                    mDet.setELMT(this.contents[i][this.col - 1], i, j);
                 }
                 double detX = mDet.detCofactor();
-                double x = detX/det;
-                mResult.setELMT(x, j, 0); 
+                double x = detX / det;
+                mResult.setELMT(x, j, 0);
                 j++;
             }
             mResult.displaySPL();
@@ -478,8 +477,8 @@ public class Matrix {
                     konstanta[j] = true;
                     break;
                 }
-           }
-        }   
+            }
+        }
 
         for (int i = 0; i < this.row; i++) {
             if (konstanta[i] == true) {
@@ -488,7 +487,7 @@ public class Matrix {
                 }
             }
         }
-    
+
         String[] result = new String[this.row];
         for (int k = 0; k < this.row; k++) {
             result[k] = "0.0 ";
@@ -497,8 +496,8 @@ public class Matrix {
         int count = 0;
         for (int j = 0; j < this.row; j++) {
             if (!konstanta[j]) {
-                String elemen = new Character((char) (97 + count)).toString(); 
-                result[j] = elemen;
+                // String elemen = new Character((char) (97 + count)).toString();
+                result[j] = Character.toString(count + 97);
                 count++;
             }
         }
@@ -513,7 +512,8 @@ public class Matrix {
                     }
                 }
 
-                result[notZero] = (this.contents[i][this.col - 1] != 0 ? (this.contents[i][this.col - 1] + " ") : "0.0 ");  
+                result[notZero] = (this.contents[i][this.col - 1] != 0 ? (this.contents[i][this.col - 1] + " ")
+                        : "0.0 ");
                 for (int j = notZero + 1; j < this.row; j++) {
                     if (this.contents[i][j] != 0) {
                         if (this.contents[i][j] < 0) {
@@ -526,44 +526,43 @@ public class Matrix {
             }
         }
 
-        
-        // Print solusi 
+        // Print solusi
         for (int i = 0; i < this.row; i++) {
-            System.out.println("x" + (i+1) + " = " + result[i]);
+            System.out.println("x" + (i + 1) + " = " + result[i]);
         }
     }
 
     /* *** DETERMINAN *** */
-    double detCofactor(){
-        /* Mengembalikan nilai determinan yang diperoleh dengan cara ekspansi kofaktor */
-            if (this.row == 1){
-                return this.contents[0][0];
-            }
-            else{
-                double det = 0;
-                int a = 1;
-                for (int i = 0; i < this.row; i++) {
-                    Matrix m1 = new Matrix(this.row - 1, this.col - 1);
-                    for (int j = 0; j < m1.getMatrixRow(); j++){
-                        for (int k = 0; k < m1.getMatrixCol(); k++){
-                            if (k < i){
-                                m1.contents[j][k] = this.contents[j+1][k];
-                            }
-                            else{
-                                m1.contents[j][k] = this.contents[j+1][k+1];
-                            }
+    double detCofactor() {
+        /*
+         * Mengembalikan nilai determinan yang diperoleh dengan cara ekspansi kofaktor
+         */
+        if (this.row == 1) {
+            return this.contents[0][0];
+        } else {
+            double det = 0;
+            int a = 1;
+            for (int i = 0; i < this.row; i++) {
+                Matrix m1 = new Matrix(this.row - 1, this.col - 1);
+                for (int j = 0; j < m1.getMatrixRow(); j++) {
+                    for (int k = 0; k < m1.getMatrixCol(); k++) {
+                        if (k < i) {
+                            m1.contents[j][k] = this.contents[j + 1][k];
+                        } else {
+                            m1.contents[j][k] = this.contents[j + 1][k + 1];
                         }
                     }
-                    det += a*this.contents[0][i]*m1.detCofactor();
-                    a *= -1;
                 }
-                return det;
+                det += a * this.contents[0][i] * m1.detCofactor();
+                a *= -1;
             }
+            return det;
         }
-    
-    double detReduction(){
-    /* Mengembalikan nilai determinan yang diperoleh dengan cara reduksi baris */
-        int i, j, k, idx; 
+    }
+
+    double detReduction() {
+        /* Mengembalikan nilai determinan yang diperoleh dengan cara reduksi baris */
+        int i, j, k, idx;
         double temp, temp1, temp2;
         double[] tempRow = new double[this.row];
         int det = 1;
@@ -577,7 +576,7 @@ public class Matrix {
             }
             if (idx == this.row) {
                 return 0.0;
-            } 
+            }
             if (i != idx) {
                 for (j = 0; j < this.row; j++) {
                     temp = this.contents[i][j];
@@ -589,9 +588,9 @@ public class Matrix {
             for (j = 0; j < this.row; j++) {
                 tempRow[j] = this.contents[i][j];
             }
-            for (j = i+1; j < this.row; j++) {
+            for (j = i + 1; j < this.row; j++) {
                 temp1 = tempRow[i];
-                temp2 = this.contents[j][i]; 
+                temp2 = this.contents[j][i];
                 for (k = 0; k < this.row; k++) {
                     this.contents[j][k] = temp1 * this.contents[j][k] - temp2 * tempRow[k];
                 }
@@ -601,7 +600,7 @@ public class Matrix {
         for (int l = 0; l < this.row; l++) {
             det *= this.contents[l][l];
         }
-        return det/co;
+        return det / co;
     }
 
     /* *** INVERSE MATRIX *** */
@@ -611,10 +610,9 @@ public class Matrix {
             for (int j = 0; j < m.getMatrixCol(); j++) {
                 if (j < this.col) {
                     m.setELMT(this.contents[i][j], i, j);
-                } 
-                else if (i == j - this.col) {
-                    m.setELMT(1, i, j);   
-                } else {  
+                } else if (i == j - this.col) {
+                    m.setELMT(1, i, j);
+                } else {
                     m.setELMT(0, i, j);
                 }
             }
@@ -626,11 +624,11 @@ public class Matrix {
                 mResult.setELMT(m.getELMT(i, j), i, j - this.col);
             }
         }
-        return mResult; 
+        return mResult;
     }
 
     Matrix inverseCofactor() {
-        Matrix mResult, mCofactor, mTemp; 
+        Matrix mResult, mCofactor, mTemp;
         /* Membuat matrix kofaktor */
         mCofactor = new Matrix(this.row, this.col);
         /* Menyimpan hasil transpose matriks kofaktor */
@@ -650,9 +648,9 @@ public class Matrix {
                     for (int k = 0; k < mSmall.getMatrixRow(); k++) {
                         for (int l = 0; l < mSmall.getMatrixCol(); l++) {
                             if (l < i) {
-                                mSmall.setELMT(this.contents[k+1][l], k, l); 
+                                mSmall.setELMT(this.contents[k + 1][l], k, l);
                             } else {
-                                mSmall.setELMT(this.contents[k+1][l+1], k, l); 
+                                mSmall.setELMT(this.contents[k + 1][l + 1], k, l);
                             }
                         }
                     }
@@ -672,28 +670,27 @@ public class Matrix {
     }
 
     /* Interpolasi Polinom */
-    void interpolasi(double x){
-        Matrix mI = new Matrix(this.row, this.row+1);
-        for (int i = 0; i < mI.row; i++){
-            for (int j = 0; j < mI.row; j++){
-                mI.setELMT(Math.pow(this.contents[i][0],j), i, j);
+    void interpolasi(double x) {
+        Matrix mI = new Matrix(this.row, this.row + 1);
+        for (int i = 0; i < mI.row; i++) {
+            for (int j = 0; j < mI.row; j++) {
+                mI.setELMT(Math.pow(this.contents[i][0], j), i, j);
             }
             mI.setELMT(this.contents[i][1], i, this.row);
         }
         Matrix mO = mI.mSPL();
         String ans = "y = ";
         ans += mO.contents[0][0];
-        for (int i = 1; i < mI.row; i++){
-            if(i == 1){
+        for (int i = 1; i < mI.row; i++) {
+            if (i == 1) {
                 ans += " + " + mO.contents[1][0] + "x";
-            }
-            else{
+            } else {
                 ans += " + " + mO.contents[i][0] + "x**" + i;
             }
         }
         double y = 0;
-        for (int i = 0; i < mI.row; i++){
-            y += mO.getELMT(i,0)*Math.pow(x,i);
+        for (int i = 0; i < mI.row; i++) {
+            y += mO.getELMT(i, 0) * Math.pow(x, i);
         }
         System.out.println(ans);
         System.out.println("f(" + x + ")=" + y);
@@ -702,95 +699,107 @@ public class Matrix {
         Scanner sv = new Scanner(System.in);
         System.out.print("Apakah anda ingin menyimpan hasil dalam file(1:ya, 2:tidak): ");
         int choice = sv.nextInt();
-        if (choice == 1){
+        if (choice == 1) {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
             Scanner s1 = new Scanner(System.in);
             File text = new File("../test/" + s1.nextLine());
-            saveToFile(text,s);
+            saveToFile(text, s);
             s1.close();
         }
         sv.close();
     }
-    /* Interpolasi Bikubik */   
-    void interpolasiBikubik(Double a, Double b){
-        Matrix X = new Matrix(16,16);
-        for (int i = 0; i < 16; i++){
-            for (int j = 0; j < 16; j++){
-                X.setELMT(Math.pow((i%4)-1,j%4)*Math.pow((i/4)-1,j/4),i,j);
+
+    /* Interpolasi Bikubik */
+    void interpolasiBikubik(Double a, Double b) {
+        Matrix X = new Matrix(16, 16);
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 16; j++) {
+                X.setELMT(Math.pow((i % 4) - 1, j % 4) * Math.pow((i / 4) - 1, j / 4), i, j);
             }
         }
         X.inverseOBE();
-        Matrix mResult = multiplyMatrix(X,this);
-        Matrix Xab = new Matrix(1,16);
-        for (int i = 0; i < 16; i++){
-            Xab.setELMT(Math.pow(a,i%4)*Math.pow(b,i/4), 0, i);
+        Matrix mResult = multiplyMatrix(X, this);
+        Matrix Xab = new Matrix(1, 16);
+        for (int i = 0; i < 16; i++) {
+            Xab.setELMT(Math.pow(a, i % 4) * Math.pow(b, i / 4), 0, i);
         }
-        Matrix f = multiplyMatrix(Xab,mResult);
-        System.out.println("f(" + a + "," + b + ") = " + f.getELMT(0,0));
+        Matrix f = multiplyMatrix(Xab, mResult);
+        String s = "f(" + a + "," + b + ") = " + f.getELMT(0, 0);
+        System.out.println(s);
+
+        Scanner sv = new Scanner(System.in);
+        System.out.print("Apakah anda ingin menyimpan hasil dalam file(1:ya, 2:tidak): ");
+        int choice = sv.nextInt();
+        if (choice == 1) {
+            System.out.print("Masukkan nama file beserta extension(.txt): ");
+            Scanner s1 = new Scanner(System.in);
+            File text = new File("../test/" + s1.nextLine());
+            saveToFile(text, s);
+            s1.close();
+        }
+        sv.close();
     }
+
     /* Regresi Linier Berganda */
-    void regresi(Double[] peubah){
-        Matrix regresi = new Matrix(this.col,this.col+1);
-        for (int i = 0; i < regresi.row; i++){
-            for (int j = 0; j < regresi.col; j++){
-                if (i == 0 && j == 0){
-                    regresi.setELMT(this.row,0,0);
-                }
-                else if (i == 0){
+    void regresi(Double[] peubah) {
+        Matrix regresi = new Matrix(this.col, this.col + 1);
+        for (int i = 0; i < regresi.row; i++) {
+            for (int j = 0; j < regresi.col; j++) {
+                if (i == 0 && j == 0) {
+                    regresi.setELMT(this.row, 0, 0);
+                } else if (i == 0) {
                     Double sum = 0.0;
-                    for (int k = 0; k < this.row; k++){
-                        sum += this.contents[k][j-1];
+                    for (int k = 0; k < this.row; k++) {
+                        sum += this.contents[k][j - 1];
                     }
                     regresi.contents[i][j] = sum;
-                    if (j < regresi.row){
+                    if (j < regresi.row) {
                         regresi.contents[j][0] = sum;
                     }
-                }
-                else if (j!=0){
+                } else if (j != 0) {
                     Double sum = 0.0;
-                    for (int k = 0; k < this.row; k++){
-                        sum += this.contents[k][j-1]*this.contents[k][i-1];
+                    for (int k = 0; k < this.row; k++) {
+                        sum += this.contents[k][j - 1] * this.contents[k][i - 1];
                     }
                     regresi.contents[i][j] = sum;
                 }
-            }            
+            }
         }
         Matrix result = regresi.mSPL();
         String ans = "y = ";
         ans += result.contents[0][0];
-        for (int i = 1; i < result.row; i++){
-            if (result.contents[i][0] > 0.0){
+        for (int i = 1; i < result.row; i++) {
+            if (result.contents[i][0] > 0.0) {
                 ans += " +";
             }
             ans += " " + result.contents[i][0] + "x" + i;
         }
         System.out.println(ans);
         double y = result.contents[0][0];
-        for (int i = 1; i < result.row; i++){
-            y += result.contents[i][0]*peubah[i-1];
+        for (int i = 1; i < result.row; i++) {
+            y += result.contents[i][0] * peubah[i - 1];
         }
         String ans1 = "f(";
-        for (int i = 0; i < this.col-1; i++){
+        for (int i = 0; i < this.col - 1; i++) {
             ans1 += peubah[i];
-            if (i != this.col-2){
+            if (i != this.col - 2) {
                 ans1 += ",";
-            }
-            else{
+            } else {
                 ans1 += ") = " + y;
             }
         }
         System.out.println(ans1);
-        
+
         String s = ans + "\n" + ans1;
         Scanner sv = new Scanner(System.in);
         System.out.print("Apakah anda ingin menyimpan hasil dalam file(1:ya, 2:tidak): ");
         int choice = sv.nextInt();
-        if (choice == 1){
+        if (choice == 1) {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
             Scanner s1 = new Scanner(System.in);
             File text = new File("../test/" + s1.nextLine());
             s1.close();
-            saveToFile(text,s);
+            saveToFile(text, s);
         }
         sv.close();
     }
