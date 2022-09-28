@@ -299,7 +299,7 @@ public class Matrix {
     /* *** SPL *** */
     /*
      * Solusi SPL dengan metode Inverse, GaussEquation, GaussJordanEquation, dan
-     * Kaidah Crammer
+     * Kaidah Cramer
      */
     void SPLInverse() {
         if (this.row != this.col - 1) {
@@ -437,13 +437,18 @@ public class Matrix {
                 }
             }
             int j = 0;
-            while (j < this.col - 1) {
+            while (j < this.row) {
                 for (int i = 0; i < this.row; i++) {
                     mDet.setELMT(this.contents[i][this.col - 1], i, j);
                 }
                 double detX = mDet.detCofactor();
                 double x = detX / det;
                 mResult.setELMT(x, j, 0);
+                for (int i = 0; i < this.row; i++) {
+                    for (int k = 0; k < this.row; k++) {
+                        mDet.setELMT(this.contents[i][k], i, k);
+                    }
+                }
                 j++;
             }
             mResult.displaySPL();
