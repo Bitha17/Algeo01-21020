@@ -96,8 +96,6 @@ public class Main {
           int pil2 = in.nextInt();
           if (pil2 == 1) {
             acceptMatrix(matrix);
-            System.out.println("Matriks yang dimasukkan: ");
-            matrix.displayMatrix();
           } else {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
             File text = new File("../test/" + in.nextLine());
@@ -146,8 +144,7 @@ public class Main {
           if (pil3 == 1) {
             acceptMatrix(matrix);
             System.out.println("Inverse matriks yang dimasukkan: ");
-            matrix.inverseCofactor();
-            matrix.displayMatrix();
+            matrix.inverseOBE().displayMatrix();
           } else {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
             File text = new File("../test/" + in.nextLine());
@@ -257,9 +254,9 @@ public class Main {
             matrix.displayMatrix();
             Double[] peubah = new Double[matrix.getMatrixCol() - 1];
             for (int i = 0; i < matrix.getMatrixCol() - 1; i++) {
-              peubah[i] = matrix.readDouble(text,matrix.getMatrixCol()*row+i+1);
+              peubah[i] = matrix.readDouble(text, matrix.getMatrixCol() * row + i + 1);
             }
-            
+
             matrix.regresi(peubah);
           }
           printMenu2();

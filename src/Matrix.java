@@ -87,8 +87,8 @@ public class Matrix {
     Double readDouble(File text, int idx) {
         try {
             Scanner in = new Scanner(text);
-            Double x = 0.0; 
-            for (int i = 0; i < idx; i++){
+            Double x = 0.0;
+            for (int i = 0; i < idx; i++) {
                 x = in.nextDouble();
             }
             in.close();
@@ -150,7 +150,6 @@ public class Matrix {
             } else {
                 System.out.println("");
             }
-            in.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -361,7 +360,7 @@ public class Matrix {
         singleSolution = false;
         manySolution = false;
         noSolution = false;
-        Matrix mResult = new Matrix(this.row, 0);
+        Matrix mResult = new Matrix(this.row, 1);
         int row, col;
         row = this.row - 1;
         col = this.col - 1;
@@ -384,14 +383,14 @@ public class Matrix {
         // Melakukan penyulihan mundur
         if (singleSolution) {
             double x = this.contents[row][col];
-            double xlast = x / this.contents[row][col - 1];
-            mResult.setELMT(xlast, row, 0);
-            double prevX = xlast;
+            mResult.setELMT(x, row, 0);
+            double[] prevX = new double[this.row];
+            prevX[this.row - 1] = x;
             for (int i = row - 1; i >= 0; i--) {
-                for (int j = col - 1; j > row; j--) {
-                    x = this.contents[i][col];
-                    x -= this.contents[i][j] * prevX;
-                    prevX = x;
+                x = this.contents[i][col];
+                for (int j = col - 1; j > i; j--) {
+                    x -= this.contents[i][j] * prevX[j];
+                    prevX[i] = x;
                 }
                 mResult.setELMT(x, i, 0);
             }
@@ -410,8 +409,8 @@ public class Matrix {
         Matrix mResult = new Matrix(this.row, 1);
         if (this.contents[row][col - 1] != 0 && this.contents[row][col] != 0 && this.row == this.col - 1) {
             // single solution
-            for (int i = 0; i < row; i++) {
-                mResult.setELMT(this.contents[i][i], i, 0);
+            for (int i = 0; i <= row; i++) {
+                mResult.setELMT(this.contents[i][col], i, 0);
             }
             mResult.displaySPL();
         } else if (isRowZero(row) && this.contents[row][col] != 0) {
@@ -430,7 +429,7 @@ public class Matrix {
             System.out.println("SPL tidak dapat diselesaikan dengan kaidah cramer");
         } else {
             Matrix mDet = new Matrix(this.row, this.row);
-            Matrix mResult = new Matrix(this.row, this.row);
+            Matrix mResult = new Matrix(this.row, 1);
             double det = this.detCofactor();
             for (int i = 0; i < this.row; i++) {
                 for (int j = 0; j < this.row; j++) {
