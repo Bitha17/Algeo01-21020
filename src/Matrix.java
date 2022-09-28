@@ -644,6 +644,49 @@ public class Matrix {
         return mResult;
     }
 
+    Matrix inverseCofactor() {
+        Matrix mResult, mCofactor;
+        /* Membuat matrix kofaktor */
+        mCofactor = new Matrix(this.row, this.col);
+        /* mResult menyimpan hasil inverse */
+        mResult = new Matrix(this.row, this.col);
+        if (this.detCofactor() == 0) {
+            System.out.println("Matrix tidak memiliki invers");
+            return null;
+        } else {
+            double onePerDet = 1 / this.detCofactor();
+            Double sign = 1.0;
+            for (int i = 0; i < this.row; i++) {
+                sign = Math.pow(-1.0, Double.valueOf(i));
+                for (int j = 0; j < this.col; j++) {
+                    Matrix m1 = new Matrix(this.row - 1, this.col - 1);
+                    for (int k = 0; k < m1.getMatrixRow(); k++) {
+                        for (int l = 0; l < m1.getMatrixCol(); l++) {
+                            if (k >= i) {
+                                if (l < j) {
+                                    m1.contents[k][l] = this.contents[k + 1][l];
+                                } else {
+                                    m1.contents[k][l] = this.contents[k + 1][l + 1];
+                                }
+                            } else {
+                                if (l < j) {
+                                    m1.contents[k][l] = this.contents[k][l];
+                                } else {
+                                    m1.contents[k][l] = this.contents[k][l + 1];
+                                }
+                            }
+                        }
+                    }
+                    mCofactor.setELMT(sign * m1.detCofactor(), i, j);
+                    sign *= (-1);
+                }
+            }
+            mResult = mCofactor.transpose(); /* Membentuk matriks adjoin */
+            mResult.multiplyConst(onePerDet);
+            return mResult;
+        }
+    }
+
     /* Interpolasi Polinom */
     void interpolasi(double x) {
         /* Mengembalikan fungsi hasil interpolasi polinom dan nilai f(x) */

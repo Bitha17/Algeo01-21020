@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.function.IntToDoubleFunction;
 import java.io.*;
 
 public class Main {
@@ -144,8 +145,6 @@ public class Main {
           int pil3 = in.nextInt();
           if (pil3 == 1) {
             acceptMatrix(matrix);
-            System.out.println("Inverse matriks yang dimasukkan: ");
-            matrix.inverseOBE().displayMatrix();
           } else {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
             File text = new File("../test/" + in.nextLine());
@@ -156,10 +155,35 @@ public class Main {
             matrix.readMatrix2(text);
             System.out.println("Matriks yang dimasukkan: ");
             matrix.displayMatrix();
-            matrix.inverseOBE();
-            int temp1 = menuSave();
-            matrix.matrixToFile(temp1);
           }
+
+          System.out.println("Penyelesaian invers matriks menggunakan : ");
+          System.out.println("1. Metode invers reduksi baris");
+          System.out.println("2. Metode invers kofaktor");
+
+          System.out.print("Masukkan angka untuk memilih metode: ");
+          int case3Choice = in.nextInt();
+
+          // Initialize Value for Inverse Matrix
+          Matrix invers = new Matrix(0, 0);
+
+          switch (case3Choice) {
+            case 1:
+              invers = matrix.inverseOBE();
+              break;
+            case 2:
+              invers = matrix.inverseCofactor();
+              break;
+            default:
+              break;
+          }
+
+          System.out.println("Invers dari matriks adalah: ");
+          invers.displayMatrix();
+
+          int temp2 = menuSave();
+          matrix.matrixToFile(temp2);
+
           printMenu2();
           choice = in.nextInt();
           break;
@@ -283,7 +307,6 @@ public class Main {
           break;
       }
     }
-
     in.close();
   }
 
@@ -297,7 +320,7 @@ public class Main {
     System.out.println("Pilihan masukan");
     System.out.println("1. Manual dari keyboard");
     System.out.println("2. Dari file");
-    System.out.print("Masukkan angka pilihanmu:");
+    System.out.print("Masukkan angka pilihanmu: ");
   }
 
   static void acceptMatrix(Matrix m) {
