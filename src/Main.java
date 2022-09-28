@@ -4,6 +4,7 @@ import java.io.*;
 public class Main {
 
   public static final Scanner in = new Scanner(System.in);
+
   public static void main(String[] args) {
     System.out.println("Aplikasi Pengolah Matrix");
     System.out.println();
@@ -95,8 +96,6 @@ public class Main {
           int pil2 = in.nextInt();
           if (pil2 == 1) {
             acceptMatrix(matrix);
-            System.out.println("Matriks yang dimasukkan: ");
-            matrix.displayMatrix();
           } else {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
             File text = new File("../test/" + in.nextLine());
@@ -145,8 +144,7 @@ public class Main {
           if (pil3 == 1) {
             acceptMatrix(matrix);
             System.out.println("Inverse matriks yang dimasukkan: ");
-            matrix.inverseOBE();
-            matrix.displayMatrix();
+            matrix.inverseOBE().displayMatrix();
           } else {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
             File text = new File("../test/" + in.nextLine());
@@ -180,14 +178,15 @@ public class Main {
             matrix.interpolasi(x);
           } else {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
+            String blank = in.nextLine();
             File text = new File("../test/" + in.nextLine());
             System.out.print("Masukkan jumlah sampel: ");
             int row = in.nextInt();
-            matrix.setMatrixDim(row, row);
+            matrix.setMatrixDim(row, 2);
             matrix.readMatrix2(text);
             System.out.println("Matriks yang dimasukkan: ");
             matrix.displayMatrix();
-            Double x = in.nextDouble();
+            Double x = matrix.readDouble(text, matrix.getMatrixRow() * 2 + 1);
             matrix.interpolasi(x);
           }
           printMenu2();
@@ -212,9 +211,11 @@ public class Main {
             matrix.interpolasiBikubik(a, b);
           } else {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
+            String blank = in.nextLine();
             File text = new File("../test/" + in.nextLine());
-            Double a = 0.0, b = 0.0;
-            matrix.readMatrix3(text, a, b);
+            matrix.readMatrix3(text);
+            Double a = matrix.readDouble(text, 17);
+            Double b = matrix.readDouble(text, 18);
             matrix.interpolasiBikubik(a, b);
           }
           printMenu2();
@@ -240,9 +241,9 @@ public class Main {
             }
             matrix.regresi(variables);
           } else {
+            String blank = in.nextLine();
             System.out.print("Masukkan nama file beserta extension(.txt): ");
             File text = new File("../test/" + in.nextLine());
-            in.close();
             System.out.print("Masukkan n jumlah peubah x: ");
             int col = in.nextInt() + 1;
             System.out.print("Masukkan m jumlah sampel: ");
@@ -252,17 +253,10 @@ public class Main {
             System.out.println("Matriks yang dimasukkan: ");
             matrix.displayMatrix();
             Double[] peubah = new Double[matrix.getMatrixCol() - 1];
-            try {
-              Scanner sc = new Scanner(text);
-              while (sc.hasNextLine()) {
-                for (int i = 0; i < matrix.getMatrixCol() - 1; i++) {
-                  peubah[i] = sc.nextDouble();
-                }
-              }
-              sc.close();
-            } catch (FileNotFoundException e) {
-              e.printStackTrace();
+            for (int i = 0; i < matrix.getMatrixCol() - 1; i++) {
+              peubah[i] = matrix.readDouble(text, matrix.getMatrixCol() * row + i + 1);
             }
+
             matrix.regresi(peubah);
           }
           printMenu2();

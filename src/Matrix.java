@@ -6,6 +6,7 @@ public class Matrix {
     private int row, col;
     private double[][] contents;
     public static final Scanner in = new Scanner(System.in);
+
     /* *** CONSTRUCTOR *** */
     Matrix(int m, int n) {
         this.row = m;
@@ -67,7 +68,7 @@ public class Matrix {
         }
     }
 
-    void readMatrix3(File text, double a, double b) {
+    void readMatrix3(File text) {
         /* Membaca input dari file untuk Interpolasi Bicubic */
         try {
             Scanner in = new Scanner(text);
@@ -77,11 +78,24 @@ public class Matrix {
                     this.setELMT(x, j * 4 + i, 0);
                 }
             }
-            a = in.nextDouble();
-            b = in.nextDouble();
             in.close();
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    Double readDouble(File text, int idx) {
+        try {
+            Scanner in = new Scanner(text);
+            Double x = 0.0;
+            for (int i = 0; i < idx; i++) {
+                x = in.nextDouble();
+            }
+            in.close();
+            return x;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return 0.0;
         }
     }
 
@@ -369,7 +383,6 @@ public class Matrix {
         // Melakukan penyulihan mundur
         if (singleSolution) {
             double x = this.contents[row][col];
-            // double xlast = x / this.contents[row][col - 1];
             mResult.setELMT(x, row, 0);
             double[] prevX = new double[this.row];
             prevX[this.row - 1] = x;
@@ -454,9 +467,9 @@ public class Matrix {
     }
 
     void parametric() {
-        String[] parametrik = {"a", "b", "c", "d", "e", "f", "g", "h",
-        "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u",
-        "v", "w", "x", "y", "z"};
+        String[] parametrik = { "a", "b", "c", "d", "e", "f", "g", "h",
+                "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u",
+                "v", "w", "x", "y", "z" };
         this.GaussJordanOBE();
         Boolean[] isAllZero = new Boolean[this.row];
         Boolean[] konstanta = new Boolean[this.row];
@@ -703,6 +716,7 @@ public class Matrix {
         System.out.print("Apakah anda ingin menyimpan hasil dalam file(1:ya, 2:tidak): ");
         int choice = in.nextInt();
         if (choice == 1) {
+            String blank = in.nextLine();
             System.out.print("Masukkan nama file beserta extension(.txt): ");
             File text = new File("../test/" + in.nextLine());
             saveToFile(text, s);
@@ -730,6 +744,7 @@ public class Matrix {
         System.out.print("Apakah anda ingin menyimpan hasil dalam file(1:ya, 2:tidak): ");
         int choice = in.nextInt();
         if (choice == 1) {
+            String blank = in.nextLine();
             System.out.print("Masukkan nama file beserta extension(.txt): ");
             File text = new File("../test/" + in.nextLine());
             saveToFile(text, s);
@@ -790,6 +805,7 @@ public class Matrix {
         System.out.print("Apakah anda ingin menyimpan hasil dalam file(1:ya, 2:tidak): ");
         int choice = in.nextInt();
         if (choice == 1) {
+            String blank = in.nextLine();
             System.out.print("Masukkan nama file beserta extension(.txt): ");
             File text = new File("../test/" + in.nextLine());
             saveToFile(text, s);
