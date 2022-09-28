@@ -57,9 +57,7 @@ public class check {
         // }
         // matrix.regresi(variables);
         // M.SPLGauss(); // RIGHT
-        M.GaussJordanOBE();
-        M.displayMatrix();
-        M.SPLGaussJordan();
+        M.SPLKaidahCramer();
         // M.SPLInverse();
         in.close();
     }

@@ -416,7 +416,7 @@ public class Matrix {
             System.out.println("SPL tidak dapat diselesaikan dengan kaidah cramer");
         } else {
             Matrix mDet = new Matrix(this.row, this.row);
-            Matrix mResult = new Matrix(this.row, this.row);
+            Matrix mResult = new Matrix(this.row, 1);
             double det = this.detCofactor();
             for (int i = 0; i < this.row; i++) {
                 for (int j = 0; j < this.row; j++) {
@@ -424,13 +424,18 @@ public class Matrix {
                 }
             }
             int j = 0;
-            while (j < this.col - 1) {
+            while (j < this.row) {
                 for (int i = 0; i < this.row; i++) {
                     mDet.setELMT(this.contents[i][this.col - 1], i, j);
                 }
                 double detX = mDet.detCofactor();
                 double x = detX / det;
                 mResult.setELMT(x, j, 0);
+                for (int i = 0; i < this.row; i++) {
+                    for (int k = 0; k < this.row; k++) {
+                        mDet.setELMT(this.contents[i][k], i, k);
+                    }
+                }
                 j++;
             }
             mResult.displaySPL();
