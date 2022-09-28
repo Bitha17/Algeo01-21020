@@ -299,7 +299,7 @@ public class Matrix {
     /* *** SPL *** */
     /*
      * Solusi SPL dengan metode Inverse, GaussEquation, GaussJordanEquation, dan
-     * Kaidah Crammer
+     * Kaidah Cramer
      */
     void SPLInverse() {
         if (this.row != this.col - 1) {
