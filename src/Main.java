@@ -20,9 +20,10 @@ public class Main {
 
     System.out.print("Silakan masukkan angka yang diinginkan untuk mengolah matriks: ");
     int choice = in.nextInt();
+    boolean exit = false;
     Matrix matrix = new Matrix(0, 0);
 
-    while (choice != 7) {
+    while (!exit) {
       switch (choice) {
         case 1:
           inputFrom();
@@ -264,14 +265,14 @@ public class Main {
           break;
 
         case 7:
-          System.out.println("Apakah Anda yakin ingin keluar dari kalkulator matrix? (1: ya 2: tidak");
+          System.out.print("Apakah Anda yakin ingin keluar dari kalkulator matrix? (1: ya, 2: tidak): ");
           int pil7 = in.nextInt();
           if (pil7 == 1) {
-            choice = 7;
+            System.out.println("Terima kasih sudah menggunakan Aplikasi Pengolah Matriks <3 \n (0w0) (^o^) (>.<)");
+            exit = true;
           } else {
             printMenu2();
             choice = in.nextInt();
-
           }
           break;
 
@@ -282,6 +283,7 @@ public class Main {
           break;
       }
     }
+
     in.close();
   }
 
