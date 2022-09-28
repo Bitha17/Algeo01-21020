@@ -18,7 +18,7 @@ public class Main {
     System.out.println("6. Regresi linear berganda");
     System.out.println("7. Keluar");
 
-    System.out.print("Silakan masukkan angka yang diinginkan untuk mengolah matriks.");
+    System.out.print("Silakan masukkan angka yang diinginkan untuk mengolah matriks: ");
     int choice = in.nextInt();
     Matrix matrix = new Matrix(0, 0);
 
@@ -54,7 +54,7 @@ public class Main {
           System.out.println("2. Metode eliminasi Gauss-Jordan ");
           System.out.println("3. Metode matriks balikan ");
           System.out.println("4. Kaidah Cramer ");
-          System.out.print("Masukkan angka untuk memilih metode! ");
+          System.out.print("Masukkan angka untuk memilih metode: ");
           int case1Choice = in.nextInt();
 
           switch (case1Choice) {
@@ -107,7 +107,7 @@ public class Main {
             matrix.displayMatrix();
           }
 
-          System.out.println("Penyelesaian determinan matriks menggunakan : ");
+          System.out.println("Penyelesaian determinan matriks menggunakan: ");
           System.out.println("1. Metode reduksi baris");
           System.out.println("2. Metode kofaktor ");
 
@@ -295,7 +295,7 @@ public class Main {
     System.out.println("Pilihan masukan");
     System.out.println("1. Manual dari keyboard");
     System.out.println("2. Dari file");
-    System.out.print("Masukkan angka pilihanmu:");
+    System.out.print("Masukkan angka pilihanmu: ");
   }
 
   static void acceptMatrix(Matrix m) {
@@ -316,6 +316,6 @@ public class Main {
     System.out.println("5. Interpolasi Bicubic");
     System.out.println("6. Regresi linear berganda");
     System.out.println("7. Keluar");
-    System.out.print("Silakan masukkan angka untuk memilih menu lain.");
+    System.out.print("Silakan masukkan angka untuk memilih menu lain: ");
   }
 }

@@ -699,10 +699,16 @@ public class Matrix {
         String ans = "y = ";
         ans += mO.contents[0][0];
         for (int i = 1; i < mI.row; i++) {
-            if (i == 1) {
-                ans += " + " + mO.contents[1][0] + "x";
-            } else {
-                ans += " + " + mO.contents[i][0] + "x**" + i;
+            if (i == 1 && mO.contents[i][0] != 0.0) {
+                if (mO.contents[i][0] > 0.0) {
+                    ans += " +";
+                }
+                ans += " " + mO.contents[1][0] + "x";
+            } else if (mO.contents[i][0] != 0.0) {
+                if (mO.contents[i][0] > 0.0) {
+                    ans += " +";
+                }
+                ans += " " + mO.contents[i][0] + "x**" + i;
             }
         }
         double y = 0;
