@@ -38,8 +38,8 @@ public class Main {
             System.out.println("Matriks yang dimasukkan: ");
             matrix.displayMatrix();
           } else {
+            String blank = in.nextLine();
             System.out.print("Masukkan nama file beserta extension(.txt): ");
-            // Scanner in = new Scanner(System.in);
             File text = new File("../test/" + in.nextLine());
             System.out.print("Masukkan ukuran matriks m(baris) n(kolom): ");
             int row = in.nextInt();
@@ -48,7 +48,6 @@ public class Main {
             matrix.readMatrix2(text);
             System.out.println("Matriks yang dimasukkan: ");
             matrix.displayMatrix();
-            // in.close();
           }
 
           System.out.println("Daftar metode penyelesaian matriks");
@@ -99,6 +98,7 @@ public class Main {
           if (pil2 == 1) {
             acceptMatrix(matrix);
           } else {
+            String blank = in.nextLine();
             System.out.print("Masukkan nama file beserta extension(.txt): ");
             File text = new File("../test/" + in.nextLine());
             System.out.print("Masukkan ukuran matriks n(baris & kolom): ");
@@ -146,6 +146,7 @@ public class Main {
           if (pil3 == 1) {
             acceptMatrix(matrix);
           } else {
+            String blank = in.nextLine();
             System.out.print("Masukkan nama file beserta extension(.txt): ");
             File text = new File("../test/" + in.nextLine());
             System.out.print("Masukkan ukuran matriks n(baris dan kolom): ");
