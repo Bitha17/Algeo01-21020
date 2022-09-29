@@ -227,7 +227,7 @@ public class Matrix {
         int i, j;
         i = 0;
         j = 0;
-        while (j < this.row) {
+        while (j < this.col - 1) {
             Boolean searchForOne = false;
             if (this.contents[i][j] == 0) {
                 Boolean seacrhForZero = false;
@@ -278,7 +278,7 @@ public class Matrix {
         /* Membentuk matriks eselon dengan 1 utama */
         this.GaussOBE();
         for (int i = this.row - 1; i >= 0; i--) {
-            for (int j = this.row - 1; j >= 0; j--) {
+            for (int j = this.col - 1; j >= 0; j--) {
                 if (this.contents[i][j] == 1) {
                     double factor;
                     int nextRow = i - 1;
@@ -490,24 +490,25 @@ public class Matrix {
                 "v", "w", "x", "y", "z" };
         this.GaussJordanOBE();
         Boolean[] isAllZero = new Boolean[this.row];
-        Boolean[] konstanta = new Boolean[this.row];
+        Boolean[] konstanta = new Boolean[this.col - 1];
         for (int i = 0; i < this.row; i++) {
             isAllZero[i] = true;
         }
         for (int i = 0; i < this.row; i++) {
-            konstanta[i] = false;
-            if (!isRowZero(i)) {
-                isAllZero[i] = false;
-                break;
+            for (int j = 0; j < this.col - 1; j++) {
+                if (this.contents[i][j] != 0) {
+                    isAllZero[i] = false;
+                    break;
+                }
             }
         }
-        for (int i = 0; i < this.row; i++) {
+        for (int i = 0; i < this.col - 1; i++) {
             konstanta[i] = false;
         }
 
         // Searching for the column that has leading entry
         for (int i = 0; i < this.row; i++) {
-            for (int j = 0; j < this.row; j++) {
+            for (int j = 0; j < this.col - 1; j++) {
                 if (this.contents[i][j] == 1) {
                     konstanta[j] = true;
                     break;
@@ -515,23 +516,14 @@ public class Matrix {
             }
         }
 
-        for (int i = 0; i < this.row; i++) {
-            if (konstanta[i] == true) {
-                for (int j = i + 1; j < this.row; j++) {
-                    konstanta[j] = false;
-                }
-            }
-        }
-
-        String[] result = new String[this.row];
+        String[] result = new String[this.col - 1];
         for (int k = 0; k < this.row; k++) {
             result[k] = "0.0 ";
         }
 
         int k = 0;
-        for (int j = 0; j < this.row; j++) {
+        for (int j = 0; j < this.col - 1; j++) {
             if (!konstanta[j]) {
-                // String elemen = new Character((char) (97 + count)).toString();
                 result[j] = parametrik[k];
                 k++;
             }
@@ -540,7 +532,7 @@ public class Matrix {
         for (int i = 0; i < this.row; i++) {
             if (!isAllZero[i]) {
                 int notZero = -9999;
-                for (int j = 0; j < this.row; j++) {
+                for (int j = 0; j < this.col - 1; j++) {
                     if (this.contents[i][j] == 1) {
                         notZero = j;
                         break;
@@ -549,7 +541,7 @@ public class Matrix {
 
                 result[notZero] = (this.contents[i][this.col - 1] != 0 ? (this.contents[i][this.col - 1] + " ")
                         : "0.0 ");
-                for (int j = notZero + 1; j < this.row; j++) {
+                for (int j = notZero + 1; j < this.col - 1; j++) {
                     if (this.contents[i][j] != 0) {
                         if (this.contents[i][j] < 0) {
                             result[notZero] += ("+ " + (this.contents[i][j] * (-1)) + result[j] + " ");
@@ -560,9 +552,8 @@ public class Matrix {
                 }
             }
         }
-
         // Print solusi
-        for (int i = 0; i < this.row; i++) {
+        for (int i = 0; i < this.col - 1; i++) {
             System.out.println("x" + (i + 1) + " = " + result[i]);
         }
     }
