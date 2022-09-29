@@ -373,28 +373,28 @@ public class Matrix {
         int row, col;
         row = this.row - 1;
         col = this.col - 1;
+
+        // Check for no solution
+        for (int i = 0; i < this.col - 1; i++) {
+            if (this.contents[row][i] == 0) {
+                if (this.contents[row][col] != 0) {
+                    noSolution = true;
+                    manySolution = false;
+                }
+            } else {
+                noSolution = false;
+                manySolution = true;
+            }
+        }
+
         // Check for single solution
         if (this.contents[row][col - 1] != 0 && this.contents[row][col] != 0 && this.row == this.col - 1) {
             singleSolution = true;
+            manySolution = false;
         } else {
             manySolution = true;
         }
 
-        // Check for no solution
-        for (int i = 0; i < this.col - 1; i++) {
-            if (this.contents[row][i] != 0) {
-                noSolution = false;
-                break;
-            } else {
-                if (this.contents[row][col] != 0) {
-                    noSolution = true;
-                    manySolution = false;
-                    singleSolution = false;
-                }
-            }
-        }
-
-        // Melakukan penyulihan mundur
         if (singleSolution) {
             double x = this.contents[row][col];
             mResult.setELMT(x, row, 0);
