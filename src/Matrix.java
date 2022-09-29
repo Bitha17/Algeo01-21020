@@ -741,7 +741,7 @@ public class Matrix {
                 X.setELMT(Math.pow((i % 4) - 1, j % 4) * Math.pow((i / 4) - 1, j / 4), i, j);
             }
         }
-        X.inverseOBE();
+        X = X.inverseOBE();
         Matrix mResult = multiplyMatrix(X, this);
         Matrix Xab = new Matrix(1, 16);
         for (int i = 0; i < 16; i++) {
