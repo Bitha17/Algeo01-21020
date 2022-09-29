@@ -83,7 +83,6 @@ public class Main {
               matrix.SPLKaidahCramer();
               int temp3 = menuSave();
               matrix.matrixToFile(temp3);
-              ;
               break;
             default:
               break;

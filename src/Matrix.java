@@ -381,11 +381,16 @@ public class Matrix {
         }
 
         // Check for no solution
-        for (int i = 0; i <= row; i++) {
-            if (this.isRowZero(i) && this.contents[i][col] != 0) {
-                noSolution = true;
-                manySolution = false;
-                singleSolution = false; // double check
+        for (int i = 0; i < this.col - 1; i++) {
+            if (this.contents[row][i] != 0) {
+                noSolution = false;
+                break;
+            } else {
+                if (this.contents[row][col] != 0) {
+                    noSolution = true;
+                    manySolution = false;
+                    singleSolution = false;
+                }
             }
         }
 
@@ -416,16 +421,27 @@ public class Matrix {
         this.GaussJordanOBE();
         int row = this.row - 1;
         int col = this.col - 1;
+        boolean noSolutions = false;
         Matrix mResult = new Matrix(this.row, 1);
-        if (this.contents[row][col - 1] != 0 && this.contents[row][col] != 0 && this.row == this.col - 1) {
+        for (int i = 0; i < this.col - 1; i++) {
+            if (this.contents[row][i] != 0) {
+                noSolutions = false;
+                break;
+            } else {
+                if (this.contents[row][col] != 0) {
+                    noSolutions = true;
+                }
+            }
+        }
+
+        if (noSolutions) {
+            System.out.println("SPL tidak memiliki solusi");
+        } else if (this.contents[row][col - 1] != 0 && this.contents[row][col] != 0 && this.row == this.col - 1) {
             // single solution
             for (int i = 0; i <= row; i++) {
                 mResult.setELMT(this.contents[i][col], i, 0);
             }
             mResult.displaySPL();
-        } else if (isRowZero(row) && this.contents[row][col] != 0) {
-            // no solution
-            System.out.println("SPL tidak memiliki solusi");
         } else {
             // many solution
             this.parametric();
