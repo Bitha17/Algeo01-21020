@@ -144,6 +144,7 @@ public class Matrix {
         /* Menyimpan hasil perhitungan determinan matriks ke dalam file */
         try {
             if (choice == 1) {
+                String blank = in.nextLine();
                 System.out.print("Masukkan nama file beserta extension(.txt): ");
                 FileWriter writer = new FileWriter("../test/" + in.nextLine());
                 writer.write("Determinan = " + Double.toString(det) + "\n");
