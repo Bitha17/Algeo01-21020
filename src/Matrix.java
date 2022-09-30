@@ -388,11 +388,13 @@ public class Matrix {
         }
 
         // Check for single solution
-        if (this.contents[row][col - 1] != 0 && this.contents[row][col] != 0 && this.row == this.col - 1) {
-            singleSolution = true;
-            manySolution = false;
-        } else {
-            manySolution = true;
+        if (!noSolution) {
+            if (this.contents[row][col - 1] != 0 && this.contents[row][col] != 0 && this.row == this.col - 1) {
+                singleSolution = true;
+                manySolution = false;
+            } else {
+                manySolution = true;
+            }
         }
 
         if (singleSolution) {
@@ -517,7 +519,7 @@ public class Matrix {
         }
 
         String[] result = new String[this.col - 1];
-        for (int k = 0; k < this.row; k++) {
+        for (int k = 0; k < this.col - 1; k++) {
             result[k] = "0.0 ";
         }
 
