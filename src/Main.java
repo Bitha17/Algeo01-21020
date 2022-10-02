@@ -17,7 +17,8 @@ public class Main {
     System.out.println("4. Interpolasi Polinom");
     System.out.println("5. Interpolasi Bicubic");
     System.out.println("6. Regresi linear berganda");
-    System.out.println("7. Keluar");
+    System.out.println("7. Image Scaling");
+    System.out.println("8. Keluar");
 
     System.out.print("Silakan masukkan angka yang diinginkan untuk mengolah matriks: ");
     int choice = in.nextInt();
@@ -287,8 +288,13 @@ public class Main {
           printMenu2();
           choice = in.nextInt();
           break;
-
         case 7:
+          matrix.imageScaling();
+          printMenu2();
+          choice = in.nextInt();
+          break;
+
+        case 8:
           System.out.print("Apakah Anda yakin ingin keluar dari kalkulator matrix? (1: ya, 2: tidak): ");
           int pil7 = in.nextInt();
           if (pil7 == 1) {
@@ -340,7 +346,8 @@ public class Main {
     System.out.println("4. Interpolasi Polinom");
     System.out.println("5. Interpolasi Bicubic");
     System.out.println("6. Regresi linear berganda");
-    System.out.println("7. Keluar");
+    System.out.println("7. Image Scaling");
+    System.out.println("8. Keluar");
     System.out.print("Silakan masukkan angka untuk memilih menu lain: ");
   }
 }

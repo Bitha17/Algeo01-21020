@@ -1,6 +1,9 @@
 import java.io.*;
 import java.util.*;
 import java.lang.Math;
+import java.awt.image.BufferedImage;
+import java.awt.Graphics;
+import javax.imageio.ImageIO;
 
 public class Matrix {
     private int row, col;
@@ -768,6 +771,81 @@ public class Matrix {
             File text = new File("../test/" + in.nextLine());
             saveToFile(text, s);
         }
+    }
+
+    /* Scaling Gambar dengan memanfaatkan interpolasi Bikubik */
+    void imageScaling() {
+        BufferedImage image = null;
+        // READ IMAGE
+        try {
+            Scanner s = new Scanner(System.in);
+            System.out.print("Masukkan nama file gambar beserta extension: ");
+            File input_file = new File("../test/" + s.nextLine());
+
+            BufferedImage image1 = ImageIO.read(input_file);
+            int width = 2 * image1.getWidth();
+            int height = 2 * image1.getHeight();
+
+            // Padding image
+            BufferedImage image2 = new BufferedImage(image1.getWidth() + 4, image1.getHeight() + 4,
+                    BufferedImage.TYPE_INT_ARGB);
+            Graphics g = image2.getGraphics();
+            g.drawImage(image1, 2, 2, null);
+            g.dispose();
+
+            image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    int x = i / 2 + 2;
+                    int y = j / 2 + 2;
+                    Matrix m = new Matrix(16, 1);
+                    for (int k = 0; k < 4; k++) {
+                        for (int l = 0; l < 4; l++) {
+                            m.setELMT(image2.getRGB(y + 1 - l, x + 1 - k), k + l * 4, 0);
+                        }
+                    }
+                    int color = m.interpolasiBikubik2(Double.valueOf(0), Double.valueOf(0));
+                    image.setRGB(j, i, color);
+                }
+            }
+
+            System.out.println("Reading complete.");
+        } catch (IOException e) {
+            System.out.println("Error: " + e);
+        }
+
+        // WRITE IMAGE
+        try {
+            // Output file path
+            File output_file = new File("../test/new.png");
+
+            // Writing to file taking type and path as
+            ImageIO.write(image, "png", output_file);
+
+            System.out.println("Writing complete.");
+        } catch (IOException e) {
+            System.out.println("Error: " + e);
+        }
+    }
+
+    int interpolasiBikubik2(Double a, Double b) {
+        /* Menghasilkan nilai f(a,b) dimana f diperoleh dari interpolasi bikubik */
+        Matrix X = new Matrix(16, 16);
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 16; j++) {
+                X.setELMT(Math.pow((i % 4) - 1, j % 4) * Math.pow((i / 4) - 1, j / 4), i, j);
+            }
+        }
+        X = X.inverseOBE();
+        Matrix mResult = multiplyMatrix(X, this);
+        Matrix Xab = new Matrix(1, 16);
+        for (int i = 0; i < 16; i++) {
+            Xab.setELMT(Math.pow(a, i % 4) * Math.pow(b, i / 4), 0, i);
+        }
+        Matrix f = multiplyMatrix(Xab, mResult);
+        // System.out.println((int) f.contents[0][0]);
+        return (int) f.contents[0][0];
     }
 
     /* Regresi Linier Berganda */
