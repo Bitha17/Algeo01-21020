@@ -151,8 +151,7 @@ public class Main {
             File text = new File("../test/" + in.nextLine());
             System.out.print("Masukkan ukuran matriks n(baris dan kolom): ");
             int row = in.nextInt();
-            int col = in.nextInt();
-            matrix.setMatrixDim(row, col);
+            matrix.setMatrixDim(row, row);
             matrix.readMatrix2(text);
             System.out.println("Matriks yang dimasukkan: ");
             matrix.displayMatrix();
