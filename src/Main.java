@@ -182,7 +182,7 @@ public class Main {
           invers.displayMatrix();
 
           int temp2 = menuSave();
-          matrix.matrixToFile(temp2);
+          invers.matrixToFile(temp2);
 
           printMenu2();
           choice = in.nextInt();
