@@ -1,6 +1,8 @@
 import java.util.*;
-import java.util.function.IntToDoubleFunction;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Main {
 
@@ -41,10 +43,10 @@ public class Main {
           } else {
             String blank = in.nextLine();
             System.out.print("Masukkan nama file beserta extension(.txt): ");
-            File text = new File("../test/" + in.nextLine());
-            System.out.print("Masukkan ukuran matriks m(baris) n(kolom): ");
-            int row = in.nextInt();
-            int col = in.nextInt();
+            String fileName = in.nextLine();
+            File text = new File("../test/" + fileName);
+            int row = getFRow(fileName);
+            int col = getFCol(fileName);
             matrix.setMatrixDim(row, col);
             matrix.readMatrix2(text);
             System.out.println("Matriks yang dimasukkan: ");
@@ -100,9 +102,9 @@ public class Main {
           } else {
             String blank = in.nextLine();
             System.out.print("Masukkan nama file beserta extension(.txt): ");
-            File text = new File("../test/" + in.nextLine());
-            System.out.print("Masukkan ukuran matriks n(baris & kolom): ");
-            int row = in.nextInt();
+            String fileName = in.nextLine();
+            File text = new File("../test/" + fileName);
+            int row = getFRow(fileName);
             matrix.setMatrixDim(row, row);
             matrix.readMatrix2(text);
             System.out.println("Matriks yang dimasukkan: ");
@@ -148,9 +150,9 @@ public class Main {
           } else {
             String blank = in.nextLine();
             System.out.print("Masukkan nama file beserta extension(.txt): ");
-            File text = new File("../test/" + in.nextLine());
-            System.out.print("Masukkan ukuran matriks n(baris dan kolom): ");
-            int row = in.nextInt();
+            String fileName = in.nextLine();
+            File text = new File("../test/" + fileName);
+            int row = getFRow(fileName);
             matrix.setMatrixDim(row, row);
             matrix.readMatrix2(text);
             System.out.println("Matriks yang dimasukkan: ");
@@ -204,9 +206,9 @@ public class Main {
           } else {
             System.out.print("Masukkan nama file beserta extension(.txt): ");
             String blank = in.nextLine();
-            File text = new File("../test/" + in.nextLine());
-            System.out.print("Masukkan jumlah sampel: ");
-            int row = in.nextInt();
+            String fileName = in.nextLine();
+            File text = new File("../test/" + fileName);
+            int row = getFRow(fileName) - 1;
             matrix.setMatrixDim(row, 2);
             matrix.readMatrix2(text);
             System.out.println("Matriks yang dimasukkan: ");
@@ -268,11 +270,10 @@ public class Main {
           } else {
             String blank = in.nextLine();
             System.out.print("Masukkan nama file beserta extension(.txt): ");
-            File text = new File("../test/" + in.nextLine());
-            System.out.print("Masukkan n jumlah peubah x: ");
-            int col = in.nextInt() + 1;
-            System.out.print("Masukkan m jumlah sampel: ");
-            int row = in.nextInt();
+            String fileName = in.nextLine();
+            File text = new File("../test/" + fileName);
+            int row = getFRow(fileName) - 1;
+            int col = getFCol(fileName);
             matrix.setMatrixDim(row, col);
             matrix.readMatrix2(text);
             System.out.println("Matriks yang dimasukkan: ");
@@ -349,5 +350,34 @@ public class Main {
     System.out.println("7. Image Scaling");
     System.out.println("8. Keluar");
     System.out.print("Silakan masukkan angka untuk memilih menu lain: ");
+  }
+
+  public static int getFCol(String fileName) {
+    File text = new File("../test/" + fileName);
+    Scanner scn;
+    try {
+      scn = new Scanner(text);
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+      return -1;
+    }
+
+    int col = 0;
+    if (scn.hasNextLine()) {
+      col = scn.nextLine().split(" ").length;
+    }
+    return col;
+  }
+
+  public static int getFRow(String text) {
+    Path path = Paths.get("../test/" + text);
+    int row = 0;
+    try {
+      row = (int) Files.lines(path).count();
+    } catch (IOException e) {
+      e.printStackTrace();
+      return -1;
+    }
+    return row;
   }
 }
