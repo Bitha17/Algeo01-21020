@@ -121,6 +121,22 @@ public class Matrix {
         }
     }
 
+    void splToFile(int choice, String s) {
+        try {
+            if (choice == 1) {
+                System.out.print("Masukkan nama file beserta extension(.txt): ");
+                FileWriter writer = new FileWriter("../test/" + in.nextLine());
+                writer.write(s);
+                System.out.println("File telah berhasil dibuat!");
+                writer.close();
+            } else {
+                System.out.println("");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     void matrixToFile(int choice) {
         /* Menyimpan matrix ke dalam file */
         try {
@@ -311,10 +327,11 @@ public class Matrix {
      * Solusi SPL dengan metode Inverse, GaussEquation, GaussJordanEquation, dan
      * Kaidah Cramer
      */
-    void SPLInverse() {
+    String SPLInverse() {
         /* Menghasilkan solusi SPL dengan metode Inverse Matriks */
         if (this.row != this.col - 1) {
             System.out.println("SPL tidak dapat diselesaikan dengan metode invers");
+            return "SPL tidak dapat diselesaikan dengan metode invers \n";
         } else {
             Matrix mTemp, mB, mResult;
             /* Menyimpan matriks A */
@@ -330,6 +347,7 @@ public class Matrix {
             }
             if (mTemp.detCofactor() == 0.0) {
                 System.out.println("Matrix tidak memiliki inverse, tidak dapat menemukan solusi SPL dengan inverse!");
+                return "Matrix tidak memiliki inverse, tidak dapat menemukan solusi SPL dengan inverse!";
             } else {
                 mTemp = mTemp.inverseOBE();
                 for (int i = 0; i < this.row; i++) {
@@ -338,6 +356,11 @@ public class Matrix {
                 mResult = multiplyMatrix(mTemp, mB);
                 // mResult.multiplyConst(1/mTemp.detCofactor());
                 mResult.displaySPL();
+                String s = ("SOLUSI SPL \n");
+                for (int i = 1; i <= mResult.row; i++) {
+                    s += "X" + i + "=" + mResult.contents[i - 1][0] + "\n";
+                }
+                return s;
             }
         }
     }
@@ -365,7 +388,7 @@ public class Matrix {
         return mResult;
     }
 
-    void SPLGauss() {
+    String SPLGauss() {
         /* Menghasilkan solusi SPL dengan GaussEquation */
         this.GaussOBE();
         Boolean singleSolution, manySolution, noSolution;
@@ -399,7 +422,7 @@ public class Matrix {
                 manySolution = true;
             }
         }
-
+        String s = "";
         if (singleSolution) {
             double x = this.contents[row][col];
             mResult.setELMT(x, row, 0);
@@ -414,14 +437,22 @@ public class Matrix {
                 mResult.setELMT(x, i, 0);
             }
             mResult.displaySPL();
+            s = "SOLUSI SPL \n";
+            for (int i = 1; i <= mResult.row; i++) {
+                s += "X" + i + "=" + mResult.contents[i - 1][0] + "\n";
+            }
+            // return s;
         } else if (manySolution) {
-            this.parametric();
+            s = this.parametric();
+            // return s;
         } else if (noSolution) {
             System.out.println("SPL tidak memiliki solusi");
+            s = "SPL tidak memiliki solusi \n";
         }
+        return s;
     }
 
-    void SPLGaussJordan() {
+    String SPLGaussJordan() {
         /* Menghasilkan solusi SPL dengan metode Gauss Jordan */
         this.GaussJordanOBE();
         int row = this.row - 1;
@@ -439,26 +470,35 @@ public class Matrix {
             }
         }
 
+        String s = "";
         if (noSolutions) {
             System.out.println("SPL tidak memiliki solusi");
+            s = "SPL tidak memiliki solusi";
         } else if (this.contents[row][col - 1] != 0 && this.contents[row][col] != 0 && this.row == this.col - 1) {
             // single solution
             for (int i = 0; i <= row; i++) {
                 mResult.setELMT(this.contents[i][col], i, 0);
             }
             mResult.displaySPL();
+            s = "SOLUSI SPL \n";
+            for (int i = 1; i <= mResult.row; i++) {
+                s += "X" + i + "=" + mResult.contents[i - 1][0] + "\n";
+            }
         } else {
             // many solution
-            this.parametric();
+            s = this.parametric();
         }
+        return s;
     }
 
-    void SPLKaidahCramer() {
+    String SPLKaidahCramer() {
         /* Menghasilkan solusi SPL dengan memanfaatkan kaidah cramer */
         if (this.row != this.col - 1) {
             System.out.println("SPL tidak dapat diselesaikan dengan kaidah cramer");
+            return "SPL tidak dapat diselesaikan dengan kaidah cramer";
         } else if (this.detCofactor() == 0) {
             System.out.println("SPL tidak dapat diselesaikan dengan kaidah cramer");
+            return "SPL tidak dapat diselesaikan dengan kaidah cramer";
         } else {
             Matrix mDet = new Matrix(this.row, this.row);
             Matrix mResult = new Matrix(this.row, 1);
@@ -484,11 +524,16 @@ public class Matrix {
                 j++;
             }
             mResult.displaySPL();
+            String s = "SOLUSI SPL \n";
+            for (int i = 1; i <= mResult.row; i++) {
+                s += "X" + i + "=" + mResult.contents[i - 1][0] + "\n";
+            }
+            return s;
         }
     }
 
     /* *** Parametric Solution Case Handle *** */
-    void parametric() {
+    String parametric() {
         /* Handle case untuk solusi SPL parametrik */
         String[] parametrik = { "a", "b", "c", "d", "e", "f", "g", "h",
                 "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u",
@@ -558,9 +603,12 @@ public class Matrix {
             }
         }
         // Print solusi
+        String s = "SOLUSI SPL \n";
         for (int i = 0; i < this.col - 1; i++) {
             System.out.println("x" + (i + 1) + " = " + result[i]);
+            s += "x" + (i + 1) + " = " + result[i] + "\n";
         }
+        return s;
     }
 
     /* *** DETERMINAN *** */

@@ -62,28 +62,28 @@ public class Main {
           switch (case1Choice) {
 
             case 1:
-              matrix.SPLGauss();
+              String s = matrix.SPLGauss();
               int temp = menuSave();
-              matrix.matrixToFile(temp);
+              matrix.splToFile(temp, s);
               break;
 
             case 2:
-              matrix.SPLGaussJordan();
+              String s1 = matrix.SPLGaussJordan();
               int temp1 = menuSave();
-              matrix.matrixToFile(temp1);
+              matrix.splToFile(temp1, s1);
               break;
 
             case 3:
               // Metode invers
-              matrix.SPLInverse();
+              String s2 = matrix.SPLInverse();
               int temp2 = menuSave();
-              matrix.matrixToFile(temp2);
+              matrix.splToFile(temp2, s2);
               break;
 
             case 4:
-              matrix.SPLKaidahCramer();
+              String s3 = matrix.SPLKaidahCramer();
               int temp3 = menuSave();
-              matrix.matrixToFile(temp3);
+              matrix.splToFile(temp3, s3);
               break;
             default:
               break;
@@ -288,6 +288,7 @@ public class Main {
           printMenu2();
           choice = in.nextInt();
           break;
+
         case 7:
           matrix.imageScaling();
           printMenu2();
