@@ -866,7 +866,9 @@ public class Matrix {
         // WRITE IMAGE
         try {
             // Output file path
-            File output_file = new File("../test/new.png");
+            Scanner s = new Scanner(System.in);
+            System.out.print("Masukkan nama file keluaran beserta extension: ");
+            File output_file = new File("../test/" + s.nextLine());
 
             // Writing to file taking type and path as
             ImageIO.write(image, "png", output_file);
