@@ -10,7 +10,7 @@
 
 ## This Repository contains:
 
-    1. "bin" folder containing java bytecode (*.class)
+    1. "bin" folder containing java bytecode (*.class), jar, and manifest
     2. "doc" folder containing the report document
     3. "src" folder containing source code of our java program
     4. "test" folder containing files used for testing
