@@ -141,6 +141,7 @@ public class Matrix {
         /* Menyimpan matrix ke dalam file */
         try {
             if (choice == 1) {
+                String blank = in.nextLine();
                 System.out.print("Masukkan nama file beserta extension(.txt): ");
                 FileWriter writer = new FileWriter("../test/" + in.nextLine());
                 for (int i = 0; i < this.row; i++) {
