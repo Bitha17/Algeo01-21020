@@ -805,7 +805,7 @@ public class Matrix {
                             m.setELMT(image2.getRGB(y + 1 - l, x + 1 - k), k + l * 4, 0);
                         }
                     }
-                    int color = m.interpolasiBikubik2(Double.valueOf(0), Double.valueOf(0));
+                    int color = m.interpolasiBikubik2(0.0, 0.0);
                     image.setRGB(j, i, color);
                 }
             }
